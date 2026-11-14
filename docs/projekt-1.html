@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alpenhütte · WF Page Transition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="demo.css">
+<script>try{window.WFPageTransitionConfig={transition:localStorage.getItem('wfpt-demo')||'sheet'}}catch(e){}</script>
+<script src="wf-page-transition.min.js"></script>
+</head>
+<body>
+<header class="header" data-page-keep="header">
+  <a href="./">WF . Page Transition</a>
+  <nav><a href="./">Projekte</a><a href="./#einbau">Einbau</a><a href="./#attribute">Attribute</a></nav>
+</header>
+<div class="hero" style="background:#3d5a45"><img data-page-morph="bild" src="https://picsum.photos/id/1018/1200/800" alt=""></div>
+<article class="article">
+  <a class="back" href="./">← Alle Projekte</a>
+  <h1 data-page-morph="titel">Alpenhütte</h1>
+  <p>Architektur · 2026. Diese Seite ist eine eigene Datei mit eigener Adresse. Lade sie neu, teile den Link oder nutze den Zurück-Button: alles verhält sich wie bei jedem normalen Seitenwechsel.</p>
+  <p>Das Bild oben und dieser Titel tragen dieselben Namen wie im Teaser auf der Übersicht. Mehr braucht es nicht, damit der Browser beide ineinander verwandelt. Unten geht es zum nächsten Projekt: Der Link wird aus einer versteckten Liste aller Projekte gefüllt.</p>
+</article>
+<div class="pager">
+  <a class="prev" data-page-prev href="#">← <span data-page-field="titel">Vorheriges Projekt</span></a>
+  <a class="next" data-page-next href="#">
+    <img data-page-field="bild" data-page-morph="bild" alt="">
+    <span class="cap"><small>Nächstes Projekt</small><strong data-page-field="titel" data-page-morph="titel"></strong></span>
+  </a>
+</div>
+<!-- In Webflow: eine Collection List aller Projekte, auf Display none -->
+<div data-page-list data-page-loop hidden>
+  <div data-page-item><a href="projekt-1.html"><span data-page-field="titel">Alpenhütte</span></a><img data-page-field="bild" loading="lazy" src="https://picsum.photos/id/1018/1200/800" alt=""></div>
+  <div data-page-item><a href="projekt-2.html"><span data-page-field="titel">Küstenweg</span></a><img data-page-field="bild" loading="lazy" src="https://picsum.photos/id/1043/1200/800" alt=""></div>
+  <div data-page-item><a href="projekt-3.html"><span data-page-field="titel">Winterwald</span></a><img data-page-field="bild" loading="lazy" src="https://picsum.photos/id/1036/1200/800" alt=""></div>
+  <div data-page-item><a href="projekt-4.html"><span data-page-field="titel">Flusstal</span></a><img data-page-field="bild" loading="lazy" src="https://picsum.photos/id/1015/1200/800" alt=""></div>
+  <div data-page-item><a href="projekt-5.html"><span data-page-field="titel">Stadtlicht</span></a><img data-page-field="bild" loading="lazy" src="https://picsum.photos/id/1067/1200/800" alt=""></div>
+  <div data-page-item><a href="projekt-6.html"><span data-page-field="titel">Felsküste</span></a><img data-page-field="bild" loading="lazy" src="https://picsum.photos/id/1044/1200/800" alt=""></div>
+</div>
+</body>
+</html>

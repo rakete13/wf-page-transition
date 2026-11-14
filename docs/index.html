@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WF Page Transition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="demo.css">
+<script>try{window.WFPageTransitionConfig={transition:localStorage.getItem('wfpt-demo')||'sheet'}}catch(e){}</script>
+<script src="wf-page-transition.min.js"></script>
+</head>
+<body>
+<header class="header" data-page-keep="header">
+  <a href="./">WF . Page Transition</a>
+  <nav><a href="./">Projekte</a><a href="./#einbau">Einbau</a><a href="./#attribute">Attribute</a></nav>
+</header>
+<div class="wrap">
+  <div class="lead">
+    <div class="eyebrow">WF Page Transition · v1.0.0 · View Transitions des Browsers</div>
+    <h1>Seitenwechsel mit <em>Übergang</em>.</h1>
+    <p>Jede Seite hier ist eine eigene Datei mit eigener URL. Klick auf ein Projekt: Bild und Titel verwandeln sich in den Kopf der Projektseite, der Rest wechselt mit dem gewählten Effekt. Der Zurück-Button spielt alles rückwärts. Auf den Projektseiten blätterst du unten zum nächsten Projekt.</p>
+  </div>
+  <div>
+    <div class="chips" id="chips">
+      <span class="label">Effekt</span>
+      <button class="chip" data-v="fade" aria-pressed="false">fade</button>
+      <button class="chip" data-v="slide" aria-pressed="false">slide</button>
+      <button class="chip" data-v="slide-up" aria-pressed="false">slide-up</button>
+      <button class="chip" data-v="zoom" aria-pressed="false">zoom</button>
+      <button class="chip" data-v="sheet" aria-pressed="false">sheet</button>
+      <button class="chip" data-v="none" aria-pressed="false">none</button>
+    </div>
+    <p class="note">Gilt für den Weg in ein Projekt. Das Blättern zwischen Projekten schiebt immer seitlich. Zum Zusehen in Zeitlupe: <a href="?wfpt-debug=slow">Zeitlupe an</a> · <a href="?wfpt-debug=off">aus</a>. In Firefox siehst du den normalen Seitenwechsel.</p>
+  </div>
+  <div class="grid">
+    <a class="teaser" href="projekt-1.html">
+      <div class="ph" style="background:#3d5a45"><img data-page-morph="bild" src="https://picsum.photos/id/1018/1200/800" alt=""></div>
+      <h3 data-page-morph="titel">Alpenhütte</h3>
+      <span>Architektur · 2026</span>
+    </a>
+    <a class="teaser" href="projekt-2.html">
+      <div class="ph" style="background:#5d7f9c"><img data-page-morph="bild" src="https://picsum.photos/id/1043/1200/800" alt=""></div>
+      <h3 data-page-morph="titel">Küstenweg</h3>
+      <span>Fotografie · 2026</span>
+    </a>
+    <a class="teaser" href="projekt-3.html">
+      <div class="ph" style="background:#7c8794"><img data-page-morph="bild" src="https://picsum.photos/id/1036/1200/800" alt=""></div>
+      <h3 data-page-morph="titel">Winterwald</h3>
+      <span>Kampagne · 2025</span>
+    </a>
+    <a class="teaser" href="projekt-4.html">
+      <div class="ph" style="background:#4f6b57"><img data-page-morph="bild" src="https://picsum.photos/id/1015/1200/800" alt=""></div>
+      <h3 data-page-morph="titel">Flusstal</h3>
+      <span>Branding · 2025</span>
+    </a>
+    <a class="teaser" href="projekt-5.html">
+      <div class="ph" style="background:#8a6a4a"><img data-page-morph="bild" src="https://picsum.photos/id/1067/1200/800" alt=""></div>
+      <h3 data-page-morph="titel">Stadtlicht</h3>
+      <span>Website · 2024</span>
+    </a>
+    <a class="teaser" href="projekt-6.html">
+      <div class="ph" style="background:#6b6f8c"><img data-page-morph="bild" src="https://picsum.photos/id/1044/1200/800" alt=""></div>
+      <h3 data-page-morph="titel">Felsküste</h3>
+      <span>Editorial · 2024</span>
+    </a>
+  </div>
+
+  <section id="einbau">
+    <h2>Einbau</h2>
+    <ol class="steps">
+      <li><strong>Head Code:</strong> Inhalt von <code>webflow/head-code.html</code> in Site Settings → Custom Code → <strong>Head Code</strong> einfügen. Er muss auf jeder Seite liegen, deshalb in den Site-Code, nicht in eine einzelne Seite.</li>
+      <li><strong>Veröffentlichen.</strong> Ab jetzt blendet jeder interne Seitenwechsel weich über.</li>
+      <li><strong>Optional:</strong> am <code>body</code> einen anderen Standard setzen, Teaser und Kopfbereich mit <code>data-page-morph</code> verbinden, Header mit <code>data-page-keep</code> stehen lassen.</li>
+    </ol>
+    <div class="stack">
+      <pre>&lt;script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.0.0/src/wf-page-transition.min.js"&gt;&lt;/script&gt;</pre>
+      <p class="note">Alternative zum eingebetteten Head Code: diese eine Zeile im Head Code. GSAP wird nicht gebraucht.</p>
+      <pre>Übersicht                                   Projektseite (CMS-Vorlage)
+collection-item (Link Block)                hero-bild     data-page-morph="bild"
+  ├── bild       data-page-morph="bild"     seitentitel   data-page-morph="titel"
+  └── titel      data-page-morph="titel"
+
+navbar          data-page-keep="header"     navbar        data-page-keep="header"</pre>
+    </div>
+  </section>
+
+  <section id="attribute">
+    <h2>Attribute</h2>
+    <div class="stack">
+    <table>
+      <thead><tr><th>Attribut</th><th>Wo</th><th>Werte</th><th>Wirkung</th></tr></thead>
+      <tbody>
+        <tr><td><code>data-page-transition</code></td><td>body</td><td><code>fade</code> (Standard), <code>slide</code>, <code>slide-up</code>, <code>zoom</code>, <code>sheet</code>, <code>none</code></td><td>Standard für alle Seitenwechsel</td></tr>
+        <tr><td><code>data-page-transition</code></td><td>Link oder ein Element darum</td><td>wie oben</td><td>anderer Effekt nur für diesen Link, <code>none</code> = ohne Übergang</td></tr>
+        <tr><td><code>data-page-duration</code></td><td>body</td><td>Sekunden, Standard <code>0.5</code></td><td>Dauer</td></tr>
+        <tr><td><code>data-page-ease</code></td><td>body</td><td>CSS-Easing, z. B. <code>ease-in-out</code> oder <code>cubic-bezier(.7,0,.2,1)</code></td><td>Verlauf der Bewegung</td></tr>
+        <tr><td><code>data-page-scale</code> · <code>-dim</code> · <code>-radius</code></td><td>body</td><td><code>0.92</code> · <code>0.5</code> · <code>24</code></td><td>nur <code>sheet</code>: Größe, Abdunkeln und Ecken der hinteren Seite</td></tr>
+        <tr><td><code>data-page-morph</code></td><td>Teaser-Element und Gegenstück auf der Zielseite</td><td>frei, z. B. <code>bild</code>, <code>titel</code></td><td>Elemente mit gleichem Namen verwandeln sich ineinander</td></tr>
+        <tr><td><code>data-page-item</code></td><td>Teaser-Wrapper</td><td>ohne Wert</td><td>nur nötig, wenn der Teaser kein Collection Item und kein Link Block ist</td></tr>
+        <tr><td><code>data-page-keep</code></td><td>Header, Footer</td><td>Name, z. B. <code>header</code></td><td>bleibt beim Wechsel stehen (auf beiden Seiten setzen)</td></tr>
+        <tr><td><code>data-page-list</code></td><td>Collection List auf der CMS-Vorlage (darf versteckt sein)</td><td>ohne Wert</td><td>Reihenfolge für das Blättern; <code>data-page-loop</code> = nach dem letzten wieder von vorn</td></tr>
+        <tr><td><code>data-page-next</code> · <code>data-page-prev</code></td><td>Link oder Block mit Link</td><td>ohne Wert</td><td>bekommt den Link zum nächsten bzw. vorherigen Eintrag; ohne Nachbar ausgeblendet</td></tr>
+        <tr><td><code>data-page-field</code></td><td>in der Liste und im Next/Prev-Block</td><td>Name, z. B. <code>titel</code>, <code>bild</code></td><td>Inhalt wird aus dem Nachbar-Eintrag übernommen (Text oder Bild)</td></tr>
+        <tr><td><code>data-page-fallback</code></td><td>body</td><td><code>fade</code></td><td>Browser ohne View Transitions blenden die Seite wenigstens ein</td></tr>
+      </tbody>
+    </table>
+    <pre>Debug:  ?wfpt-debug an die Adresse (bleibt für den Tab an) · ?wfpt-debug=slow Zeitlupe · ?wfpt-debug=off
+API:    WFPageTransition.finished (Promise) · WFPageTransition.last · Ereignis "wfpt:done" am document
+Vorher: window.WFPageTransitionConfig = { transition: 'fade', duration: 0.5, ease: '' }</pre>
+    </div>
+  </section>
+</div>
+<script>
+(() => {
+  const cur = (window.WFPageTransition && WFPageTransition.config.transition) || 'sheet';
+  const chips = document.getElementById('chips');
+  const mark = (v) => chips.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.v === v)));
+  mark(cur);
+  chips.addEventListener('click', (e) => {
+    const b = e.target.closest('.chip');
+    if (!b) return;
+    try { localStorage.setItem('wfpt-demo', b.dataset.v); } catch (_) {}
+    if (window.WFPageTransition) WFPageTransition.config.transition = b.dataset.v;
+    mark(b.dataset.v);
+  });
+})();
+</script>
+</body>
+</html>

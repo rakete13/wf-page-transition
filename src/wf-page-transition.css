@@ -1,0 +1,82 @@
+/* WF Page Transition · Übergänge zwischen Seiten mit den View Transitions des Browsers */
+@view-transition { navigation: auto; }
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}
+
+:root {
+  --wfpt-duration: 0.5s;
+  --wfpt-ease: cubic-bezier(0.7, 0, 0.2, 1);
+  --wfpt-scale: 0.92; /* sheet: Größe der hinteren Seite */
+  --wfpt-dim: 0.5; /* sheet: Abdunkeln der hinteren Seite (0 bis 1) */
+  --wfpt-radius: 24px; /* sheet: Ecken der hinteren Seite */
+}
+
+::view-transition-group(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-duration: var(--wfpt-duration);
+  animation-timing-function: var(--wfpt-ease);
+}
+
+/* ---------- slide: seitlich schieben ---------- */
+html[data-wfpt='slide']::view-transition-old(root) { animation: wfpt-to-left var(--wfpt-duration) var(--wfpt-ease) both; mix-blend-mode: normal; }
+html[data-wfpt='slide']::view-transition-new(root) { animation: wfpt-from-right var(--wfpt-duration) var(--wfpt-ease) both; mix-blend-mode: normal; }
+html[data-wfpt='slide'][data-wfpt-dir='back']::view-transition-old(root) { animation-name: wfpt-to-right; }
+html[data-wfpt='slide'][data-wfpt-dir='back']::view-transition-new(root) { animation-name: wfpt-from-left; }
+
+/* ---------- slide-up: nach oben schieben ---------- */
+html[data-wfpt='slide-up']::view-transition-old(root) { animation: wfpt-to-top var(--wfpt-duration) var(--wfpt-ease) both; mix-blend-mode: normal; }
+html[data-wfpt='slide-up']::view-transition-new(root) { animation: wfpt-from-bottom var(--wfpt-duration) var(--wfpt-ease) both; mix-blend-mode: normal; }
+html[data-wfpt='slide-up'][data-wfpt-dir='back']::view-transition-old(root) { animation-name: wfpt-to-bottom; }
+html[data-wfpt='slide-up'][data-wfpt-dir='back']::view-transition-new(root) { animation-name: wfpt-from-top; }
+
+/* ---------- zoom: alte Seite weicht zurück, neue kommt nach vorn ---------- */
+html[data-wfpt='zoom']::view-transition-old(root) { animation: wfpt-zoom-out-back var(--wfpt-duration) var(--wfpt-ease) both; mix-blend-mode: normal; }
+html[data-wfpt='zoom']::view-transition-new(root) { animation: wfpt-zoom-in-front var(--wfpt-duration) var(--wfpt-ease) both; mix-blend-mode: normal; }
+html[data-wfpt='zoom'][data-wfpt-dir='back']::view-transition-old(root) { animation-name: wfpt-zoom-out-front; }
+html[data-wfpt='zoom'][data-wfpt-dir='back']::view-transition-new(root) { animation-name: wfpt-zoom-in-back; }
+
+/* ---------- sheet: alte Seite rückt nach hinten, neue fährt von unten darüber ---------- */
+html[data-wfpt='sheet']::view-transition { background: #000; }
+html[data-wfpt='sheet']::view-transition-image-pair(root) { isolation: auto; }
+html[data-wfpt='sheet']::view-transition-old(root),
+html[data-wfpt='sheet']::view-transition-new(root) { mix-blend-mode: normal; transform-origin: 50% 50%; }
+html[data-wfpt='sheet']::view-transition-old(root) { animation: wfpt-sheet-back var(--wfpt-duration) var(--wfpt-ease) both; }
+html[data-wfpt='sheet']::view-transition-new(root) { animation: wfpt-from-bottom var(--wfpt-duration) var(--wfpt-ease) both; }
+html[data-wfpt='sheet'][data-wfpt-dir='back']::view-transition-old(root) { animation-name: wfpt-to-bottom; z-index: 1; }
+html[data-wfpt='sheet'][data-wfpt-dir='back']::view-transition-new(root) { animation-name: wfpt-sheet-front; }
+
+/* ---------- Elemente, die sich verwandeln (data-page-morph) ---------- */
+::view-transition-old(.wfpt-img),
+::view-transition-new(.wfpt-img) { width: 100%; height: 100%; object-fit: cover; }
+
+/* ---------- Elemente, die stehen bleiben (data-page-keep) ---------- */
+::view-transition-group(.wfpt-keep) { animation: none; }
+::view-transition-old(.wfpt-keep) { display: none; }
+::view-transition-new(.wfpt-keep) { animation: none; mix-blend-mode: normal; }
+
+/* ---------- Browser ohne View Transitions: optional einfaches Einblenden ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  html.wfpt-nosupport body[data-page-fallback='fade'] { animation: wfpt-fade 0.4s ease-out both; }
+}
+
+@keyframes wfpt-fade { from { opacity: 0; } }
+@keyframes wfpt-to-left { to { transform: translateX(-100%); } }
+@keyframes wfpt-to-right { to { transform: translateX(100%); } }
+@keyframes wfpt-from-left { from { transform: translateX(-100%); } }
+@keyframes wfpt-from-right { from { transform: translateX(100%); } }
+@keyframes wfpt-to-top { to { transform: translateY(-100%); } }
+@keyframes wfpt-to-bottom { to { transform: translateY(100%); } }
+@keyframes wfpt-from-top { from { transform: translateY(-100%); } }
+@keyframes wfpt-from-bottom { from { transform: translateY(100%); } }
+@keyframes wfpt-zoom-out-back { to { opacity: 0; transform: scale(0.94); } }
+@keyframes wfpt-zoom-in-front { from { opacity: 0; transform: scale(1.06); } }
+@keyframes wfpt-zoom-out-front { to { opacity: 0; transform: scale(1.06); } }
+@keyframes wfpt-zoom-in-back { from { opacity: 0; transform: scale(0.94); } }
+@keyframes wfpt-sheet-back {
+  to { transform: scale(var(--wfpt-scale)); filter: brightness(calc(1 - var(--wfpt-dim))); border-radius: var(--wfpt-radius); }
+}
+@keyframes wfpt-sheet-front {
+  from { transform: scale(var(--wfpt-scale)); filter: brightness(calc(1 - var(--wfpt-dim))); border-radius: var(--wfpt-radius); }
+}
