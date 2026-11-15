@@ -12,7 +12,7 @@ Demo und Doku: **https://rakete13.github.io/wf-page-transition/**
 Alternative, eine Zeile im Head Code (lädt von jsDelivr, IP-Adresse der Besucher geht dorthin):
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.2.1/src/wf-page-transition.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.2.2/src/wf-page-transition.min.js"></script>
 ```
 
 GSAP wird nicht gebraucht. Der Head Code hat rund 15.500 Zeichen.
@@ -51,6 +51,7 @@ collection-item (Link Block)                img-wrapper   data-page-morph="bild"
 - Auf der Zielseite dürfen die Gegenstücke nicht in einem Link oder Collection Item liegen.
 - **Bei Bildern an den Wrapper, nicht an das `img`:** Der Wrapper gibt Größe, Seitenverhältnis, Ecken und den Beschnitt vor, und genau diese Form verwandelt sich. Am `img` selbst ginge der Beschnitt des Wrappers während des Übergangs verloren (z. B. bei einem höheren Parallax-Bild aus WF Anim). Pro Paar nur ein Element markieren, nicht Wrapper und Bild zugleich.
 - Am besten haben beide Bilder dasselbe Motiv. Unterschiedliche Seitenverhältnisse werden beschnitten, nicht verzerrt.
+- **Bilder werden nicht überblendet, sondern überdeckt** (ab 1.2.2): Das Teaser-Bild bleibt beim Wachsen voll sichtbar, das Bild der Zielseite legt sich darüber, sobald es geladen ist. Ist es noch nicht da (Webflow lädt Bilder mit `loading="lazy"`), wartet das Einblenden. Bilder im Morph lädt die Library deshalb sofort und mit hoher Priorität.
 
 ### Reihenfolge (ab 1.2)
 

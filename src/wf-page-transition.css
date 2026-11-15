@@ -50,7 +50,14 @@ html[data-wfpt='sheet'][data-wfpt-dir='back']::view-transition-new(root) { anima
 
 /* ---------- Elemente, die sich verwandeln (data-page-morph) ---------- */
 ::view-transition-old(.wfpt-img),
-::view-transition-new(.wfpt-img) { width: 100%; height: 100%; object-fit: cover; }
+::view-transition-new(.wfpt-img) { width: 100%; height: 100%; object-fit: cover; mix-blend-mode: normal; }
+/* Bilder nicht überblenden, sondern überdecken: Das alte Bild bleibt voll sichtbar, das neue legt
+   sich darüber. Ist das neue Bild noch nicht geladen, bleibt das alte stehen statt durchsichtig
+   zu werden. Das neue Abbild ist live und erscheint, sobald das Bild geladen ist. */
+::view-transition-old(.wfpt-img) { animation-name: none; opacity: 1; }
+::view-transition-new(.wfpt-img) { animation-name: wfpt-fade; }
+/* neues Bild noch nicht geladen: Einblenden anhalten, das alte Bild bleibt stehen */
+html.wfpt-wait::view-transition-new(.wfpt-img) { animation-play-state: paused; }
 
 /* ---------- Reihenfolge mit Morph: erst der Morph, dann die Seite ----------
    vorwärts: Bild wächst über der alten Seite an seinen Platz, danach wechselt die Seite drumherum.

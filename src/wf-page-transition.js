@@ -1,5 +1,5 @@
 /*!
- * WF Page Transition v1.2.1
+ * WF Page Transition v1.2.2
  * Übergänge zwischen Seiten für Webflow, mit den View Transitions des Browsers.
  * Jede Seite behält ihre eigene URL, es wird nichts per Skript nachgeladen.
  *
@@ -10,7 +10,7 @@
   'use strict';
   if (window.WFPageTransition) return;
 
-  const VERSION = '1.2.1';
+  const VERSION = '1.2.2';
   const html = document.documentElement;
   // order: 'morph-first' = erst Morph, dann Seite · 'together' = beides gleichzeitig
   const cfg = Object.assign({ transition: 'fade', duration: 0.5, ease: '', radius: '', order: 'morph-first', split: 0.6, debug: false }, window.WFPageTransitionConfig || {});
@@ -101,6 +101,11 @@
       used.add(n);
       const img = el.tagName === 'IMG' || el.tagName === 'VIDEO' || el.tagName === 'PICTURE' || !!el.querySelector('img,video');
       setName(el, 'wfpt-' + n.replace(/[^a-zA-Z0-9_-]/g, '-'), img ? 'wfpt-morph wfpt-img' : 'wfpt-morph');
+      // Bilder im Morph sofort laden (Webflow setzt loading="lazy"), damit sie rechtzeitig da sind
+      (el.tagName === 'IMG' ? [el] : Array.from(el.querySelectorAll('img'))).forEach((im) => {
+        if (im.loading === 'lazy') im.loading = 'eager';
+        im.fetchPriority = 'high';
+      });
       done.push(n);
     });
     return done;
@@ -321,6 +326,24 @@
         r.names.forEach((n) => api.last.morph.includes(n) || issue(`Kein Gegenstück für data-page-morph="${n}" auf dieser Seite gefunden.`));
       }
     }
+    // Bilder im Morph, die noch nicht geladen sind: neues Abbild erst einblenden, wenn sie da sind
+    const pending = named
+      .filter((el) => el.style.viewTransitionClass.includes('wfpt-img'))
+      .flatMap((el) => (el.tagName === 'IMG' ? [el] : Array.from(el.querySelectorAll('img'))))
+      .filter((im) => !(im.complete && im.naturalWidth));
+    if (pending.length) {
+      html.classList.add('wfpt-wait');
+      const ready = (im) =>
+        new Promise((res) => {
+          const go = () => (im.decode ? im.decode().catch(() => {}).then(res) : res());
+          if (im.complete && im.naturalWidth) go();
+          else {
+            im.addEventListener('load', go, { once: true });
+            im.addEventListener('error', res, { once: true });
+          }
+        });
+      Promise.all(pending.map(ready)).then(() => html.classList.remove('wfpt-wait'));
+    }
     const order = (document.body && document.body.dataset.pageOrder) || cfg.order;
     if (api.last.morph.length && order !== 'together') html.classList.add('wfpt-seq');
     api.last.ran = true;
@@ -335,6 +358,7 @@
       delete html.dataset.wfpt;
       delete html.dataset.wfptDir;
       html.classList.remove('wfpt-seq');
+      html.classList.remove('wfpt-wait');
       html.classList.remove('wfpt-running');
       done();
       document.dispatchEvent(new CustomEvent('wfpt:done', { detail: api.last }));
