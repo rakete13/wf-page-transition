@@ -143,6 +143,7 @@ navbar          data-page-keep="header"     navbar        data-page-keep="header
         <tr><td><code>data-page-duration</code></td><td>body</td><td>Sekunden, Standard <code>0.5</code></td><td>Dauer</td></tr>
         <tr><td><code>data-page-ease</code></td><td>body</td><td>CSS-Easing, z. B. <code>ease-in-out</code> oder <code>cubic-bezier(.7,0,.2,1)</code></td><td>Verlauf der Bewegung</td></tr>
         <tr><td><code>data-page-scale</code> · <code>-dim</code> · <code>-radius</code></td><td>body</td><td><code>0.92</code> · <code>0.5</code> · <code>24</code></td><td>nur <code>sheet</code>: Größe und Abdunkeln der hinteren Seite, Eckenradius in px. Die hintere Seite rundet ihre Ecken ab, die neue kommt mit runden Ecken und wird beim Ankommen eckig. <code>0</code> = ohne runde Ecken</td></tr>
+        <tr><td><code>data-page-order</code> · <code>-split</code></td><td>body</td><td><code>morph-first</code> (Standard) oder <code>together</code> · <code>0.6</code></td><td>mit Morph: erst wächst das Bild, dann wechselt die Seite; Split = Anteil der Dauer für den Morph</td></tr>
         <tr><td><code>data-page-morph</code></td><td>Teaser-Element und Gegenstück auf der Zielseite</td><td>frei, z. B. <code>bild</code>, <code>titel</code></td><td>Elemente mit gleichem Namen verwandeln sich ineinander</td></tr>
         <tr><td><code>data-page-item</code></td><td>Teaser-Wrapper</td><td>ohne Wert</td><td>nur nötig, wenn der Teaser kein Collection Item und kein Link Block ist</td></tr>
         <tr><td><code>data-page-keep</code></td><td>Header, Footer</td><td>Name, z. B. <code>header</code></td><td>bleibt beim Wechsel stehen (auf beiden Seiten setzen)</td></tr>
@@ -154,7 +155,7 @@ navbar          data-page-keep="header"     navbar        data-page-keep="header
     </table>
     <pre>Debug:  ?wfpt-debug an die Adresse (bleibt für den Tab an) · ?wfpt-debug=slow Zeitlupe · ?wfpt-debug=off
 API:    WFPageTransition.finished (Promise) · WFPageTransition.last · Ereignis "wfpt:done" am document
-Vorher: window.WFPageTransitionConfig = { transition: 'fade', duration: 0.5, ease: '' }</pre>
+Vorher: window.WFPageTransitionConfig = { transition: 'fade', duration: 0.5, ease: '', radius: 24, order: 'morph-first', split: 0.6 }</pre>
     </div>
   </section>
 </div>

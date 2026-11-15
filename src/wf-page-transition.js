@@ -1,5 +1,5 @@
 /*!
- * WF Page Transition v1.1.0
+ * WF Page Transition v1.2.0
  * Übergänge zwischen Seiten für Webflow, mit den View Transitions des Browsers.
  * Jede Seite behält ihre eigene URL, es wird nichts per Skript nachgeladen.
  *
@@ -10,9 +10,10 @@
   'use strict';
   if (window.WFPageTransition) return;
 
-  const VERSION = '1.1.0';
+  const VERSION = '1.2.0';
   const html = document.documentElement;
-  const cfg = Object.assign({ transition: 'fade', duration: 0.5, ease: '', debug: false }, window.WFPageTransitionConfig || {});
+  // order: 'morph-first' = erst Morph, dann Seite · 'together' = beides gleichzeitig
+  const cfg = Object.assign({ transition: 'fade', duration: 0.5, ease: '', radius: '', order: 'morph-first', split: 0.6, debug: false }, window.WFPageTransitionConfig || {});
   const EFFECTS = ['fade', 'slide', 'slide-up', 'zoom', 'sheet', 'none'];
   const SCOPE = '[data-page-item],[data-page-next],[data-page-prev],.w-dyn-item';
   const supported = 'onpagereveal' in window;
@@ -278,6 +279,8 @@
     if (ease) st.setProperty('--wfpt-ease', ease);
     if (b.pageScale) st.setProperty('--wfpt-scale', b.pageScale);
     if (b.pageDim) st.setProperty('--wfpt-dim', b.pageDim);
+    const split = parseFloat(b.pageSplit !== undefined ? b.pageSplit : cfg.split);
+    if (Number.isFinite(split)) st.setProperty('--wfpt-split', String(Math.min(0.9, Math.max(0.1, split))));
     const radius = b.pageRadius !== undefined ? b.pageRadius : cfg.radius;
     if (radius !== undefined && radius !== '') st.setProperty('--wfpt-radius', /^[\d.]+$/.test(String(radius)) ? radius + 'px' : radius);
   };
@@ -318,6 +321,8 @@
         r.names.forEach((n) => api.last.morph.includes(n) || issue(`Kein Gegenstück für data-page-morph="${n}" auf dieser Seite gefunden.`));
       }
     }
+    const order = (document.body && document.body.dataset.pageOrder) || cfg.order;
+    if (api.last.morph.length && order !== 'together') html.classList.add('wfpt-seq');
     api.last.ran = true;
     api.last.status = 'läuft';
     vt.ready.catch((err) => {
@@ -329,6 +334,7 @@
       clearNames();
       delete html.dataset.wfpt;
       delete html.dataset.wfptDir;
+      html.classList.remove('wfpt-seq');
       html.classList.remove('wfpt-running');
       done();
       document.dispatchEvent(new CustomEvent('wfpt:done', { detail: api.last }));

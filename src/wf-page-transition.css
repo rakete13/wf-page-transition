@@ -10,6 +10,7 @@
   --wfpt-scale: 0.92; /* sheet: Größe der hinteren Seite */
   --wfpt-dim: 0.5; /* sheet: Abdunkeln der hinteren Seite (0 bis 1) */
   --wfpt-radius: 24px; /* sheet: Ecken beider Seiten während des Wechsels, 0 = eckig */
+  --wfpt-split: 0.6; /* mit Morph: Anteil der Dauer für den Morph, der Rest für den Seitenwechsel */
 }
 
 ::view-transition-group(*),
@@ -50,6 +51,32 @@ html[data-wfpt='sheet'][data-wfpt-dir='back']::view-transition-new(root) { anima
 /* ---------- Elemente, die sich verwandeln (data-page-morph) ---------- */
 ::view-transition-old(.wfpt-img),
 ::view-transition-new(.wfpt-img) { width: 100%; height: 100%; object-fit: cover; }
+
+/* ---------- Reihenfolge mit Morph: erst der Morph, dann die Seite ----------
+   vorwärts: Bild wächst über der alten Seite an seinen Platz, danach wechselt die Seite drumherum.
+   zurück: Seite wechselt zuerst um das große Bild, danach schrumpft es in seinen Teaser. */
+html.wfpt-seq[data-wfpt]::view-transition-group(.wfpt-morph),
+html.wfpt-seq[data-wfpt]::view-transition-old(.wfpt-morph),
+html.wfpt-seq[data-wfpt]::view-transition-new(.wfpt-morph) {
+  animation-duration: calc(var(--wfpt-duration) * var(--wfpt-split));
+  animation-delay: 0s;
+  animation-fill-mode: both;
+}
+html.wfpt-seq[data-wfpt]::view-transition-old(root),
+html.wfpt-seq[data-wfpt]::view-transition-new(root) {
+  animation-duration: calc(var(--wfpt-duration) * (1 - var(--wfpt-split)));
+  animation-delay: calc(var(--wfpt-duration) * var(--wfpt-split));
+  animation-fill-mode: both;
+}
+html.wfpt-seq[data-wfpt][data-wfpt-dir='back']::view-transition-group(.wfpt-morph),
+html.wfpt-seq[data-wfpt][data-wfpt-dir='back']::view-transition-old(.wfpt-morph),
+html.wfpt-seq[data-wfpt][data-wfpt-dir='back']::view-transition-new(.wfpt-morph) {
+  animation-delay: calc(var(--wfpt-duration) * (1 - var(--wfpt-split)));
+}
+html.wfpt-seq[data-wfpt][data-wfpt-dir='back']::view-transition-old(root),
+html.wfpt-seq[data-wfpt][data-wfpt-dir='back']::view-transition-new(root) {
+  animation-delay: 0s;
+}
 
 /* ---------- Elemente, die stehen bleiben (data-page-keep) ---------- */
 ::view-transition-group(.wfpt-keep) { animation: none; }

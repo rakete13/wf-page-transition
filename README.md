@@ -12,10 +12,10 @@ Demo und Doku: **https://rakete13.github.io/wf-page-transition/**
 Alternative, eine Zeile im Head Code (lädt von jsDelivr, IP-Adresse der Besucher geht dorthin):
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.1.0/src/wf-page-transition.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.2.0/src/wf-page-transition.min.js"></script>
 ```
 
-GSAP wird nicht gebraucht. Der Head Code hat rund 13.500 Zeichen.
+GSAP wird nicht gebraucht. Der Head Code hat rund 15.500 Zeichen.
 
 ## Effekte
 
@@ -51,6 +51,14 @@ collection-item (Link Block)                img-wrapper   data-page-morph="bild"
 - Auf der Zielseite dürfen die Gegenstücke nicht in einem Link oder Collection Item liegen.
 - **Bei Bildern an den Wrapper, nicht an das `img`:** Der Wrapper gibt Größe, Seitenverhältnis, Ecken und den Beschnitt vor, und genau diese Form verwandelt sich. Am `img` selbst ginge der Beschnitt des Wrappers während des Übergangs verloren (z. B. bei einem höheren Parallax-Bild aus WF Anim). Pro Paar nur ein Element markieren, nicht Wrapper und Bild zugleich.
 - Am besten haben beide Bilder dasselbe Motiv. Unterschiedliche Seitenverhältnisse werden beschnitten, nicht verzerrt.
+
+### Reihenfolge (ab 1.2)
+
+Gibt es einen Morph, läuft er **zuerst**: Das Bild wächst über der stehenden alten Seite an seinen Platz, erst danach wechselt die Seite drumherum mit dem gewählten Effekt. Beim Zurück-Button umgekehrt: erst wechselt die Seite um das große Bild, dann schrumpft es in seinen Teaser. Die Gesamtdauer bleibt `data-page-duration`.
+
+- `data-page-split` am body bzw. `split` im Config (Standard `0.6`): Anteil der Dauer für den Morph.
+- `data-page-order="together"` am body bzw. `order: 'together'` im Config: Morph und Seitenwechsel laufen wieder gleichzeitig.
+- Ohne Morph (z. B. Klick im Menü) gilt die volle Dauer für den Seitenwechsel.
 
 ## Stehen bleiben: `data-page-keep`
 
@@ -92,7 +100,7 @@ prev-link         data-page-prev
 
 - `?wfpt-debug` an die Adresse: Hinweise in der Konsole und ein Hinweisfeld unten links. Bleibt für den Tab an. `?wfpt-debug=slow` zeigt alles in Zeitlupe, `?wfpt-debug=off` schaltet ab.
 - `WFPageTransition.last` (Effekt, Richtung, Morph-Namen, Status), `WFPageTransition.finished`, `WFPageTransition.supported`.
-- Voreinstellungen vor dem Skript: `window.WFPageTransitionConfig = { transition: 'fade', duration: 0.5, ease: '' }`.
+- Voreinstellungen vor dem Skript (gelten für die ganze Site, Attribute am body überschreiben sie pro Seite): `window.WFPageTransitionConfig = { transition: 'fade', duration: 0.5, ease: '', radius: 24, order: 'morph-first', split: 0.6 }`.
 
 ## Aufbau
 
