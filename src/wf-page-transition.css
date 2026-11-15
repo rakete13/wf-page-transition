@@ -53,18 +53,20 @@ html[data-wfpt='sheet'][data-wfpt-dir='back']::view-transition-new(root) { anima
 ::view-transition-image-pair(.wfpt-img) { overflow: hidden; }
 ::view-transition-old(.wfpt-img),
 ::view-transition-new(.wfpt-img) { width: 100%; height: 100%; object-fit: cover; overflow: clip; mix-blend-mode: normal; }
-/* Bilder nicht überblenden, sondern überdecken: Das alte Bild bleibt voll sichtbar, das neue legt
-   sich darüber. Ist das neue Bild noch nicht geladen, bleibt das alte stehen statt durchsichtig
-   zu werden. Das neue Abbild ist live und erscheint, sobald das Bild geladen ist. */
-::view-transition-old(.wfpt-img) { animation-name: none; opacity: 1; }
-::view-transition-new(.wfpt-img) { animation-name: wfpt-fade; }
-/* neues Bild noch nicht geladen: Einblenden anhalten, das alte Bild bleibt stehen */
+/* Bilder: Es wird nicht zwischen zwei Abbildern überblendet, sondern das Bild mit dem größeren
+   Ausschnitt (die Zielseite vorwärts, die Ausgangsseite zurück) füllt die wachsende bzw.
+   schrumpfende Fläche allein, mit object-fit: cover. Bei gleichem Bild in Teaser und Stage sieht
+   es am Anfang aus wie der Teaser und zeigt beim Wachsen immer mehr vom Bild, ohne Zoom.
+   Ist das Bild der Zielseite noch nicht geladen, scheint das alte Abbild darunter durch. */
+::view-transition-old(.wfpt-img) { animation: none; opacity: 1; }
+::view-transition-new(.wfpt-img) { animation: wfpt-show var(--wfpt-duration) linear both; }
+html[data-wfpt-dir='back']::view-transition-new(.wfpt-img) { animation-name: wfpt-hidden; }
+/* neues Bild noch nicht geladen: Übergang am Ende anhalten, bis es da ist */
 html.wfpt-wait::view-transition-new(.wfpt-img) { animation-play-state: paused; }
 
 /* ---------- order: morph-first (Standard) · nur der Morph bewegt sich ----------
-   vorwärts: Das Bild wächst über der stehenden alten Seite an seinen Platz, dabei blendet das Bild
-   der Zielseite über das Teaser-Bild. Ist es dort (und das Bild der Zielseite geladen), ist die
-   neue Seite sofort da, ohne Fade und ohne Effekt.
+   vorwärts: Das Bild wächst über der stehenden alten Seite an seinen Platz. Ist es dort (und das
+   Bild der Zielseite geladen), ist die neue Seite sofort da, ohne Fade und ohne Effekt.
    zurück: Die Übersicht ist sofort da, das große Bild schrumpft darüber in seinen Teaser. */
 html.wfpt-seq[data-wfpt]::view-transition-group(.wfpt-morph),
 html.wfpt-seq[data-wfpt]::view-transition-old(.wfpt-morph),
@@ -74,8 +76,6 @@ html.wfpt-seq[data-wfpt]::view-transition-new(.wfpt-morph) {
   animation-fill-mode: both;
 }
 html.wfpt-seq[data-wfpt]::view-transition-group(.wfpt-morph) { animation-timing-function: var(--wfpt-morph-ease, var(--wfpt-ease)); }
-/* Bild: das neue Bild blendet während des Wachsens über das alte (das alte bleibt deckend darunter) */
-html.wfpt-seq[data-wfpt]::view-transition-new(.wfpt-img) { animation-name: wfpt-fade; animation-timing-function: var(--wfpt-morph-ease, var(--wfpt-ease)); }
 html.wfpt-seq[data-wfpt]::view-transition-old(root),
 html.wfpt-seq[data-wfpt]::view-transition-new(root) { mix-blend-mode: normal; transform: none; filter: none; clip-path: none; }
 html.wfpt-seq[data-wfpt]::view-transition-old(root) { animation: none; opacity: 1; }
@@ -83,6 +83,7 @@ html.wfpt-seq[data-wfpt]::view-transition-new(root) { animation: wfpt-hidden var
 html.wfpt-seq[data-wfpt][data-wfpt-dir='back']::view-transition-old(root) { animation: wfpt-hidden var(--wfpt-duration) linear both; }
 html.wfpt-seq[data-wfpt][data-wfpt-dir='back']::view-transition-new(root) { animation: none; opacity: 1; }
 @keyframes wfpt-hidden { from, to { opacity: 0; } }
+@keyframes wfpt-show { from, to { opacity: 1; } }
 
 /* ---------- order: morph-effect · erst der Morph, danach der Seiteneffekt ---------- */
 html.wfpt-seqfx[data-wfpt]::view-transition-group(.wfpt-morph),

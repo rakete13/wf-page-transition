@@ -1,5 +1,5 @@
 /*!
- * WF Page Transition v1.4.1
+ * WF Page Transition v1.5.0
  * Übergänge zwischen Seiten für Webflow, mit den View Transitions des Browsers.
  * Jede Seite behält ihre eigene URL, es wird nichts per Skript nachgeladen.
  *
@@ -10,7 +10,7 @@
   'use strict';
   if (window.WFPageTransition) return;
 
-  const VERSION = '1.4.1';
+  const VERSION = '1.5.0';
   const html = document.documentElement;
   // order (mit Morph): 'morph-first' = nur das Bild bewegt sich, danach ist die Seite sofort da ·
   // 'morph-effect' = erst Morph, dann der Seiteneffekt (split = Anteil für den Morph) ·
