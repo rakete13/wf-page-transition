@@ -12,7 +12,7 @@ Demo und Doku: **https://rakete13.github.io/wf-page-transition/**
 Alternative, eine Zeile im Head Code (lädt von jsDelivr, IP-Adresse der Besucher geht dorthin):
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.2.0/src/wf-page-transition.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.2.1/src/wf-page-transition.min.js"></script>
 ```
 
 GSAP wird nicht gebraucht. Der Head Code hat rund 15.500 Zeichen.
