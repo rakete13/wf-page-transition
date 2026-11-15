@@ -42,32 +42,32 @@
   </div>
   <div class="grid">
     <a class="teaser" href="projekt-1.html">
-      <div class="ph" style="background:#3d5a45"><img data-page-morph="bild" src="https://picsum.photos/id/1018/1200/800" alt=""></div>
+      <div class="ph" data-page-morph="bild" style="background:#3d5a45"><img src="https://picsum.photos/id/1018/1200/800" alt=""></div>
       <h3 data-page-morph="titel">Alpenhütte</h3>
       <span>Architektur · 2026</span>
     </a>
     <a class="teaser" href="projekt-2.html">
-      <div class="ph" style="background:#5d7f9c"><img data-page-morph="bild" src="https://picsum.photos/id/1043/1200/800" alt=""></div>
+      <div class="ph" data-page-morph="bild" style="background:#5d7f9c"><img src="https://picsum.photos/id/1043/1200/800" alt=""></div>
       <h3 data-page-morph="titel">Küstenweg</h3>
       <span>Fotografie · 2026</span>
     </a>
     <a class="teaser" href="projekt-3.html">
-      <div class="ph" style="background:#7c8794"><img data-page-morph="bild" src="https://picsum.photos/id/1036/1200/800" alt=""></div>
+      <div class="ph" data-page-morph="bild" style="background:#7c8794"><img src="https://picsum.photos/id/1036/1200/800" alt=""></div>
       <h3 data-page-morph="titel">Winterwald</h3>
       <span>Kampagne · 2025</span>
     </a>
     <a class="teaser" href="projekt-4.html">
-      <div class="ph" style="background:#4f6b57"><img data-page-morph="bild" src="https://picsum.photos/id/1015/1200/800" alt=""></div>
+      <div class="ph" data-page-morph="bild" style="background:#4f6b57"><img src="https://picsum.photos/id/1015/1200/800" alt=""></div>
       <h3 data-page-morph="titel">Flusstal</h3>
       <span>Branding · 2025</span>
     </a>
     <a class="teaser" href="projekt-5.html">
-      <div class="ph" style="background:#8a6a4a"><img data-page-morph="bild" src="https://picsum.photos/id/1067/1200/800" alt=""></div>
+      <div class="ph" data-page-morph="bild" style="background:#8a6a4a"><img src="https://picsum.photos/id/1067/1200/800" alt=""></div>
       <h3 data-page-morph="titel">Stadtlicht</h3>
       <span>Website · 2024</span>
     </a>
     <a class="teaser" href="projekt-6.html">
-      <div class="ph" style="background:#6b6f8c"><img data-page-morph="bild" src="https://picsum.photos/id/1044/1200/800" alt=""></div>
+      <div class="ph" data-page-morph="bild" style="background:#6b6f8c"><img src="https://picsum.photos/id/1044/1200/800" alt=""></div>
       <h3 data-page-morph="titel">Felsküste</h3>
       <span>Editorial · 2024</span>
     </a>
@@ -84,9 +84,10 @@
       <pre>&lt;script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.1.0/src/wf-page-transition.min.js"&gt;&lt;/script&gt;</pre>
       <p class="note">Alternative zum eingebetteten Head Code: diese eine Zeile im Head Code. GSAP wird nicht gebraucht.</p>
       <pre>Übersicht                                   Projektseite (CMS-Vorlage)
-collection-item (Link Block)                hero-bild     data-page-morph="bild"
-  ├── bild       data-page-morph="bild"     seitentitel   data-page-morph="titel"
-  └── titel      data-page-morph="titel"
+collection-item (Link Block)                img-wrapper   data-page-morph="bild"
+  ├── img-wrapper  data-page-morph="bild"     └── img
+  │     └── img                               seitentitel   data-page-morph="titel"
+  └── titel        data-page-morph="titel"
 
 navbar          data-page-keep="header"     navbar        data-page-keep="header"</pre>
     </div>

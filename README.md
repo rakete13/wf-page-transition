@@ -40,15 +40,17 @@ Elemente mit demselben Namen im Teaser und auf der Zielseite verwandeln sich ine
 
 ```
 Übersicht                                   Projektseite (CMS-Vorlage)
-collection-item (Link Block)                hero-bild     data-page-morph="bild"
-  ├── bild       data-page-morph="bild"     seitentitel   data-page-morph="titel"
-  └── titel      data-page-morph="titel"
+collection-item (Link Block)                img-wrapper   data-page-morph="bild"
+  ├── img-wrapper  data-page-morph="bild"     └── img
+  │     └── img                               seitentitel   data-page-morph="titel"
+  └── titel        data-page-morph="titel"
 ```
 
 - In Listen dürfen alle Teaser dieselben Namen tragen. Die Library vergibt den Namen erst beim Klick an den angeklickten Teaser und beim Zurückgehen an den Teaser, von dem man kam.
 - Als Teaser gilt ein Collection Item, ein Link Block oder ein Element mit `data-page-item`.
 - Auf der Zielseite dürfen die Gegenstücke nicht in einem Link oder Collection Item liegen.
-- Am besten haben beide Bilder dasselbe Motiv. Unterschiedliche Seitenverhältnisse werden beschnitten.
+- **Bei Bildern an den Wrapper, nicht an das `img`:** Der Wrapper gibt Größe, Seitenverhältnis, Ecken und den Beschnitt vor, und genau diese Form verwandelt sich. Am `img` selbst ginge der Beschnitt des Wrappers während des Übergangs verloren (z. B. bei einem höheren Parallax-Bild aus WF Anim). Pro Paar nur ein Element markieren, nicht Wrapper und Bild zugleich.
+- Am besten haben beide Bilder dasselbe Motiv. Unterschiedliche Seitenverhältnisse werden beschnitten, nicht verzerrt.
 
 ## Stehen bleiben: `data-page-keep`
 

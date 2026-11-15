@@ -106,7 +106,7 @@ ${HEADER}
   </div>
   <div class="grid">
     ${P.map((p, i) => `<a class="teaser" href="${file(i)}">
-      <div class="ph" style="background:${p.c}"><img data-page-morph="bild" src="${img(p, 1200, 800)}" alt=""></div>
+      <div class="ph" data-page-morph="bild" style="background:${p.c}"><img src="${img(p, 1200, 800)}" alt=""></div>
       <h3 data-page-morph="titel">${p.t}</h3>
       <span>${p.k} · ${p.y}</span>
     </a>`).join('\n    ')}
@@ -123,9 +123,10 @@ ${HEADER}
       <pre>&lt;script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@${v}/src/wf-page-transition.min.js"&gt;&lt;/script&gt;</pre>
       <p class="note">Alternative zum eingebetteten Head Code: diese eine Zeile im Head Code. GSAP wird nicht gebraucht.</p>
       <pre>Übersicht                                   Projektseite (CMS-Vorlage)
-collection-item (Link Block)                hero-bild     data-page-morph="bild"
-  ├── bild       data-page-morph="bild"     seitentitel   data-page-morph="titel"
-  └── titel      data-page-morph="titel"
+collection-item (Link Block)                img-wrapper   data-page-morph="bild"
+  ├── img-wrapper  data-page-morph="bild"     └── img
+  │     └── img                               seitentitel   data-page-morph="titel"
+  └── titel        data-page-morph="titel"
 
 navbar          data-page-keep="header"     navbar        data-page-keep="header"</pre>
     </div>
@@ -189,7 +190,7 @@ Vorher: window.WFPageTransitionConfig = { transition: 'fade', duration: 0.5, eas
 const project = (p, i) => `${HEAD(p.t + ' · WF Page Transition')}
 <body>
 ${HEADER}
-<div class="hero" style="background:${p.c}"><img data-page-morph="bild" src="${img(p, 1200, 800)}" alt=""></div>
+<div class="hero" data-page-morph="bild" style="background:${p.c}"><img src="${img(p, 1200, 800)}" alt=""></div>
 <article class="article">
   <a class="back" href="./">← Alle Projekte</a>
   <h1 data-page-morph="titel">${p.t}</h1>
@@ -198,8 +199,8 @@ ${HEADER}
 </article>
 <div class="pager">
   <a class="prev" data-page-prev href="#">← <span data-page-field="titel">Vorheriges Projekt</span></a>
-  <a class="next" data-page-next href="#">
-    <img data-page-field="bild" data-page-morph="bild" alt="">
+  <a class="next" data-page-next data-page-morph="bild" href="#">
+    <img data-page-field="bild" alt="">
     <span class="cap"><small>Nächstes Projekt</small><strong data-page-field="titel" data-page-morph="titel"></strong></span>
   </a>
 </div>
