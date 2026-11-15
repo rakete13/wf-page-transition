@@ -1,5 +1,5 @@
 /*!
- * WF Page Transition v1.3.0
+ * WF Page Transition v1.4.0
  * Übergänge zwischen Seiten für Webflow, mit den View Transitions des Browsers.
  * Jede Seite behält ihre eigene URL, es wird nichts per Skript nachgeladen.
  *
@@ -10,7 +10,7 @@
   'use strict';
   if (window.WFPageTransition) return;
 
-  const VERSION = '1.3.0';
+  const VERSION = '1.4.0';
   const html = document.documentElement;
   // order (mit Morph): 'morph-first' = nur das Bild bewegt sich, danach ist die Seite sofort da ·
   // 'morph-effect' = erst Morph, dann der Seiteneffekt (split = Anteil für den Morph) ·
@@ -275,6 +275,29 @@
     }
   };
 
+  // Übliche Easings mit GSAP-Namen, als CSS-Kurven (CSS-Werte wie ease-in-out oder cubic-bezier(…) gehen auch)
+  const B = (a, b, c, d) => `cubic-bezier(${a}, ${b}, ${c}, ${d})`;
+  const EASES = {
+    none: 'linear', linear: 'linear',
+    'sine.in': B(0.12, 0, 0.39, 0), 'sine.out': B(0.61, 1, 0.88, 1), 'sine.inout': B(0.37, 0, 0.63, 1),
+    'power1.in': B(0.11, 0, 0.5, 0), 'power1.out': B(0.5, 1, 0.89, 1), 'power1.inout': B(0.45, 0, 0.55, 1),
+    'power2.in': B(0.32, 0, 0.67, 0), 'power2.out': B(0.33, 1, 0.68, 1), 'power2.inout': B(0.65, 0, 0.35, 1),
+    'power3.in': B(0.5, 0, 0.75, 0), 'power3.out': B(0.25, 1, 0.5, 1), 'power3.inout': B(0.76, 0, 0.24, 1),
+    'power4.in': B(0.64, 0, 0.78, 0), 'power4.out': B(0.22, 1, 0.36, 1), 'power4.inout': B(0.83, 0, 0.17, 1),
+    'expo.in': B(0.7, 0, 0.84, 0), 'expo.out': B(0.16, 1, 0.3, 1), 'expo.inout': B(0.87, 0, 0.13, 1),
+    'circ.in': B(0.55, 0, 1, 0.45), 'circ.out': B(0, 0.55, 0.45, 1), 'circ.inout': B(0.85, 0, 0.15, 1),
+    'back.in': B(0.36, 0, 0.66, -0.56), 'back.out': B(0.34, 1.56, 0.64, 1), 'back.inout': B(0.68, -0.6, 0.32, 1.6),
+  };
+  const toEase = (v) => {
+    if (!v) return '';
+    const k = String(v).trim().toLowerCase().replace(/-/g, '');
+    if (EASES[k]) return EASES[k];
+    if (/^(power[1-4]|sine|expo|circ|back)$/.test(k)) return EASES[k + '.out']; // GSAP: ohne Zusatz = .out
+    if (/^[a-z]+\.(in|out|inout)$/.test(k)) issue(`Unbekanntes Easing "${v}", es gilt der Standard.`);
+    return /^[a-z]+\.(in|out|inout)$/.test(k) ? '' : String(v).trim();
+  };
+  api.eases = Object.keys(EASES);
+
   const applyVars = () => {
     const b = document.body ? document.body.dataset : {};
     let d = parseFloat(b.pageDuration);
@@ -282,11 +305,11 @@
     if (debugOn() === 'slow') d *= 6;
     const st = html.style;
     st.setProperty('--wfpt-duration', d + 's');
-    const ease = b.pageEase || cfg.ease;
+    const ease = toEase(b.pageEase || cfg.ease);
     if (ease) st.setProperty('--wfpt-ease', ease);
     if (b.pageScale) st.setProperty('--wfpt-scale', b.pageScale);
     if (b.pageDim) st.setProperty('--wfpt-dim', b.pageDim);
-    const mease = b.pageMorphEase || cfg.morphEase;
+    const mease = toEase(b.pageMorphEase || cfg.morphEase);
     if (mease) st.setProperty('--wfpt-morph-ease', mease);
     const split = parseFloat(b.pageSplit !== undefined ? b.pageSplit : cfg.split);
     if (Number.isFinite(split)) st.setProperty('--wfpt-split', String(Math.min(0.9, Math.max(0.1, split))));

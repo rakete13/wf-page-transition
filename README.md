@@ -12,7 +12,7 @@ Demo und Doku: **https://rakete13.github.io/wf-page-transition/**
 Alternative, eine Zeile im Head Code (lädt von jsDelivr, IP-Adresse der Besucher geht dorthin):
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.3.0/src/wf-page-transition.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.4.0/src/wf-page-transition.min.js"></script>
 ```
 
 GSAP wird nicht gebraucht. Der Head Code hat rund 18.000 Zeichen.
@@ -32,7 +32,20 @@ GSAP wird nicht gebraucht. Der Head Code hat rund 18.000 Zeichen.
 
 Der Zurück-Button spielt den Übergang, mit dem man gekommen ist, rückwärts ab.
 
-Am body einstellbar: `data-page-duration` (Sekunden, Standard `0.5`), `data-page-ease` (CSS-Easing), für `sheet` außerdem `data-page-scale` (`0.92`), `data-page-dim` (`0.5`) und `data-page-radius` (Eckenradius in px, Standard `24`, `0` = ohne runde Ecken).
+Am body einstellbar: `data-page-duration` (Sekunden, Standard `0.5`), `data-page-ease` (Easing, siehe unten), für `sheet` außerdem `data-page-scale` (`0.92`), `data-page-dim` (`0.5`) und `data-page-radius` (Eckenradius in px, Standard `24`, `0` = ohne runde Ecken).
+
+### Easing (ab 1.4)
+
+`ease` bzw. `data-page-ease` (Seitenübergänge) und `morphEase` bzw. `data-page-morph-ease` (Morph) verstehen die üblichen GSAP-Namen, wie in WF Anim und WF Slider:
+
+| Familie | Werte |
+|---|---|
+| sanft bis kräftig | `power1` `power2` `power3` `power4` |
+| weitere | `sine` `expo` `circ` `back` (schwingt leicht über) |
+| Zusatz | `.in` (langsam los), `.out` (langsam aus), `.inOut` (beides), z. B. `power3.inOut`. Ohne Zusatz gilt `.out` |
+| linear | `linear` bzw. `none` |
+
+Daneben gehen alle CSS-Werte wie `ease-in-out` oder `cubic-bezier(0.7, 0, 0.2, 1)`. Ohne Angabe gilt `cubic-bezier(0.7, 0, 0.2, 1)`, etwa wie `power3.inOut`. Ein unbekannter Name meldet der Debug-Modus.
 
 ## Elemente verwandeln: `data-page-morph`
 
