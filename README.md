@@ -12,7 +12,7 @@ Demo und Doku: **https://rakete13.github.io/wf-page-transition/**
 Alternative, eine Zeile im Head Code (lädt von jsDelivr, IP-Adresse der Besucher geht dorthin):
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.4.0/src/wf-page-transition.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.4.1/src/wf-page-transition.min.js"></script>
 ```
 
 GSAP wird nicht gebraucht. Der Head Code hat rund 18.000 Zeichen.
@@ -68,7 +68,7 @@ collection-item (Link Block)                img-wrapper   data-page-morph="bild"
 
 ### Reihenfolge mit Morph (ab 1.3)
 
-Gibt es einen Morph, bewegt sich standardmäßig **nur das Bild**: Es wächst deckend über der stehenden alten Seite an seinen Platz. Ist es dort angekommen (und das Bild der Zielseite geladen), ist die neue Seite **sofort** da, ohne Fade und ohne Seiteneffekt. Beim Zurück-Button ist die Übersicht sofort da, und das große Bild schrumpft darüber in seinen Teaser. Der gewählte Effekt (`data-page-transition`) gilt dann nur für Seitenwechsel ohne Morph, z. B. im Menü.
+Gibt es einen Morph, bewegt sich standardmäßig **nur das Bild**: Es wächst über der stehenden alten Seite an seinen Platz, dabei blendet das Bild der Zielseite über das Teaser-Bild. Ist es dort angekommen (und das Bild der Zielseite geladen), ist die neue Seite **sofort** da, ohne Fade und ohne Seiteneffekt. Beim Zurück-Button ist die Übersicht sofort da, und das große Bild schrumpft darüber in seinen Teaser. Der gewählte Effekt (`data-page-transition`) gilt dann nur für Seitenwechsel ohne Morph, z. B. im Menü.
 
 | `data-page-order` (body) bzw. `order` (Config) | Wirkung |
 |---|---|

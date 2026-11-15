@@ -49,8 +49,10 @@ html[data-wfpt='sheet'][data-wfpt-dir='back']::view-transition-old(root) { anima
 html[data-wfpt='sheet'][data-wfpt-dir='back']::view-transition-new(root) { animation-name: wfpt-sheet-front; }
 
 /* ---------- Elemente, die sich verwandeln (data-page-morph) ---------- */
+/* Bilder füllen die Morph-Fläche (beschnitten, nicht verzerrt) und ragen nicht darüber hinaus */
+::view-transition-image-pair(.wfpt-img) { overflow: hidden; }
 ::view-transition-old(.wfpt-img),
-::view-transition-new(.wfpt-img) { width: 100%; height: 100%; object-fit: cover; mix-blend-mode: normal; }
+::view-transition-new(.wfpt-img) { width: 100%; height: 100%; object-fit: cover; overflow: clip; mix-blend-mode: normal; }
 /* Bilder nicht überblenden, sondern überdecken: Das alte Bild bleibt voll sichtbar, das neue legt
    sich darüber. Ist das neue Bild noch nicht geladen, bleibt das alte stehen statt durchsichtig
    zu werden. Das neue Abbild ist live und erscheint, sobald das Bild geladen ist. */
@@ -60,8 +62,9 @@ html[data-wfpt='sheet'][data-wfpt-dir='back']::view-transition-new(root) { anima
 html.wfpt-wait::view-transition-new(.wfpt-img) { animation-play-state: paused; }
 
 /* ---------- order: morph-first (Standard) · nur der Morph bewegt sich ----------
-   vorwärts: Das Bild wächst deckend über der stehenden alten Seite an seinen Platz. Ist es dort
-   (und das Bild der Zielseite geladen), ist die neue Seite sofort da, ohne Fade und ohne Effekt.
+   vorwärts: Das Bild wächst über der stehenden alten Seite an seinen Platz, dabei blendet das Bild
+   der Zielseite über das Teaser-Bild. Ist es dort (und das Bild der Zielseite geladen), ist die
+   neue Seite sofort da, ohne Fade und ohne Effekt.
    zurück: Die Übersicht ist sofort da, das große Bild schrumpft darüber in seinen Teaser. */
 html.wfpt-seq[data-wfpt]::view-transition-group(.wfpt-morph),
 html.wfpt-seq[data-wfpt]::view-transition-old(.wfpt-morph),
@@ -71,7 +74,8 @@ html.wfpt-seq[data-wfpt]::view-transition-new(.wfpt-morph) {
   animation-fill-mode: both;
 }
 html.wfpt-seq[data-wfpt]::view-transition-group(.wfpt-morph) { animation-timing-function: var(--wfpt-morph-ease, var(--wfpt-ease)); }
-html.wfpt-seq[data-wfpt]::view-transition-new(.wfpt-img) { animation-name: wfpt-appear-end; animation-timing-function: linear; }
+/* Bild: das neue Bild blendet während des Wachsens über das alte (das alte bleibt deckend darunter) */
+html.wfpt-seq[data-wfpt]::view-transition-new(.wfpt-img) { animation-name: wfpt-fade; animation-timing-function: var(--wfpt-morph-ease, var(--wfpt-ease)); }
 html.wfpt-seq[data-wfpt]::view-transition-old(root),
 html.wfpt-seq[data-wfpt]::view-transition-new(root) { mix-blend-mode: normal; transform: none; filter: none; clip-path: none; }
 html.wfpt-seq[data-wfpt]::view-transition-old(root) { animation: none; opacity: 1; }
@@ -79,7 +83,6 @@ html.wfpt-seq[data-wfpt]::view-transition-new(root) { animation: wfpt-hidden var
 html.wfpt-seq[data-wfpt][data-wfpt-dir='back']::view-transition-old(root) { animation: wfpt-hidden var(--wfpt-duration) linear both; }
 html.wfpt-seq[data-wfpt][data-wfpt-dir='back']::view-transition-new(root) { animation: none; opacity: 1; }
 @keyframes wfpt-hidden { from, to { opacity: 0; } }
-@keyframes wfpt-appear-end { 0%, 99% { opacity: 0; } 100% { opacity: 1; } }
 
 /* ---------- order: morph-effect · erst der Morph, danach der Seiteneffekt ---------- */
 html.wfpt-seqfx[data-wfpt]::view-transition-group(.wfpt-morph),
