@@ -59,29 +59,49 @@ html[data-wfpt='sheet'][data-wfpt-dir='back']::view-transition-new(root) { anima
 /* neues Bild noch nicht geladen: Einblenden anhalten, das alte Bild bleibt stehen */
 html.wfpt-wait::view-transition-new(.wfpt-img) { animation-play-state: paused; }
 
-/* ---------- Reihenfolge mit Morph: erst der Morph, dann die Seite ----------
-   vorwärts: Bild wächst über der alten Seite an seinen Platz, danach wechselt die Seite drumherum.
-   zurück: Seite wechselt zuerst um das große Bild, danach schrumpft es in seinen Teaser. */
+/* ---------- order: morph-first (Standard) · nur der Morph bewegt sich ----------
+   vorwärts: Das Bild wächst deckend über der stehenden alten Seite an seinen Platz. Ist es dort
+   (und das Bild der Zielseite geladen), ist die neue Seite sofort da, ohne Fade und ohne Effekt.
+   zurück: Die Übersicht ist sofort da, das große Bild schrumpft darüber in seinen Teaser. */
 html.wfpt-seq[data-wfpt]::view-transition-group(.wfpt-morph),
 html.wfpt-seq[data-wfpt]::view-transition-old(.wfpt-morph),
 html.wfpt-seq[data-wfpt]::view-transition-new(.wfpt-morph) {
+  animation-duration: var(--wfpt-duration);
+  animation-delay: 0s;
+  animation-fill-mode: both;
+}
+html.wfpt-seq[data-wfpt]::view-transition-group(.wfpt-morph) { animation-timing-function: var(--wfpt-morph-ease, var(--wfpt-ease)); }
+html.wfpt-seq[data-wfpt]::view-transition-new(.wfpt-img) { animation-name: wfpt-appear-end; animation-timing-function: linear; }
+html.wfpt-seq[data-wfpt]::view-transition-old(root),
+html.wfpt-seq[data-wfpt]::view-transition-new(root) { mix-blend-mode: normal; transform: none; filter: none; clip-path: none; }
+html.wfpt-seq[data-wfpt]::view-transition-old(root) { animation: none; opacity: 1; }
+html.wfpt-seq[data-wfpt]::view-transition-new(root) { animation: wfpt-hidden var(--wfpt-duration) linear both; }
+html.wfpt-seq[data-wfpt][data-wfpt-dir='back']::view-transition-old(root) { animation: wfpt-hidden var(--wfpt-duration) linear both; }
+html.wfpt-seq[data-wfpt][data-wfpt-dir='back']::view-transition-new(root) { animation: none; opacity: 1; }
+@keyframes wfpt-hidden { from, to { opacity: 0; } }
+@keyframes wfpt-appear-end { 0%, 99% { opacity: 0; } 100% { opacity: 1; } }
+
+/* ---------- order: morph-effect · erst der Morph, danach der Seiteneffekt ---------- */
+html.wfpt-seqfx[data-wfpt]::view-transition-group(.wfpt-morph),
+html.wfpt-seqfx[data-wfpt]::view-transition-old(.wfpt-morph),
+html.wfpt-seqfx[data-wfpt]::view-transition-new(.wfpt-morph) {
   animation-duration: calc(var(--wfpt-duration) * var(--wfpt-split));
   animation-delay: 0s;
   animation-fill-mode: both;
 }
-html.wfpt-seq[data-wfpt]::view-transition-old(root),
-html.wfpt-seq[data-wfpt]::view-transition-new(root) {
+html.wfpt-seqfx[data-wfpt]::view-transition-old(root),
+html.wfpt-seqfx[data-wfpt]::view-transition-new(root) {
   animation-duration: calc(var(--wfpt-duration) * (1 - var(--wfpt-split)));
   animation-delay: calc(var(--wfpt-duration) * var(--wfpt-split));
   animation-fill-mode: both;
 }
-html.wfpt-seq[data-wfpt][data-wfpt-dir='back']::view-transition-group(.wfpt-morph),
-html.wfpt-seq[data-wfpt][data-wfpt-dir='back']::view-transition-old(.wfpt-morph),
-html.wfpt-seq[data-wfpt][data-wfpt-dir='back']::view-transition-new(.wfpt-morph) {
+html.wfpt-seqfx[data-wfpt][data-wfpt-dir='back']::view-transition-group(.wfpt-morph),
+html.wfpt-seqfx[data-wfpt][data-wfpt-dir='back']::view-transition-old(.wfpt-morph),
+html.wfpt-seqfx[data-wfpt][data-wfpt-dir='back']::view-transition-new(.wfpt-morph) {
   animation-delay: calc(var(--wfpt-duration) * (1 - var(--wfpt-split)));
 }
-html.wfpt-seq[data-wfpt][data-wfpt-dir='back']::view-transition-old(root),
-html.wfpt-seq[data-wfpt][data-wfpt-dir='back']::view-transition-new(root) {
+html.wfpt-seqfx[data-wfpt][data-wfpt-dir='back']::view-transition-old(root),
+html.wfpt-seqfx[data-wfpt][data-wfpt-dir='back']::view-transition-new(root) {
   animation-delay: 0s;
 }
 

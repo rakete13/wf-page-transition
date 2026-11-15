@@ -1,5 +1,5 @@
 /*!
- * WF Page Transition v1.2.2
+ * WF Page Transition v1.3.0
  * Übergänge zwischen Seiten für Webflow, mit den View Transitions des Browsers.
  * Jede Seite behält ihre eigene URL, es wird nichts per Skript nachgeladen.
  *
@@ -10,10 +10,12 @@
   'use strict';
   if (window.WFPageTransition) return;
 
-  const VERSION = '1.2.2';
+  const VERSION = '1.3.0';
   const html = document.documentElement;
-  // order: 'morph-first' = erst Morph, dann Seite · 'together' = beides gleichzeitig
-  const cfg = Object.assign({ transition: 'fade', duration: 0.5, ease: '', radius: '', order: 'morph-first', split: 0.6, debug: false }, window.WFPageTransitionConfig || {});
+  // order (mit Morph): 'morph-first' = nur das Bild bewegt sich, danach ist die Seite sofort da ·
+  // 'morph-effect' = erst Morph, dann der Seiteneffekt (split = Anteil für den Morph) ·
+  // 'together' = beides gleichzeitig. morphEase = Easing des Morphs.
+  const cfg = Object.assign({ transition: 'fade', duration: 0.5, ease: '', radius: '', order: 'morph-first', split: 0.6, morphEase: '', debug: false }, window.WFPageTransitionConfig || {});
   const EFFECTS = ['fade', 'slide', 'slide-up', 'zoom', 'sheet', 'none'];
   const SCOPE = '[data-page-item],[data-page-next],[data-page-prev],.w-dyn-item';
   const supported = 'onpagereveal' in window;
@@ -284,6 +286,8 @@
     if (ease) st.setProperty('--wfpt-ease', ease);
     if (b.pageScale) st.setProperty('--wfpt-scale', b.pageScale);
     if (b.pageDim) st.setProperty('--wfpt-dim', b.pageDim);
+    const mease = b.pageMorphEase || cfg.morphEase;
+    if (mease) st.setProperty('--wfpt-morph-ease', mease);
     const split = parseFloat(b.pageSplit !== undefined ? b.pageSplit : cfg.split);
     if (Number.isFinite(split)) st.setProperty('--wfpt-split', String(Math.min(0.9, Math.max(0.1, split))));
     const radius = b.pageRadius !== undefined ? b.pageRadius : cfg.radius;
@@ -342,10 +346,27 @@
             im.addEventListener('error', res, { once: true });
           }
         });
-      Promise.all(pending.map(ready)).then(() => html.classList.remove('wfpt-wait'));
+      // Weiter: angehaltene Einblendungen auf den Stand ihres Morphs bringen, dann fortsetzen
+      const resume = () => {
+        if (!html.classList.contains('wfpt-wait')) return;
+        try {
+          const all = document.getAnimations().filter((x) => x.effect && x.effect.pseudoElement);
+          all.forEach((x) => {
+            const m = /^::view-transition-new\((wfpt-[^)]+)\)$/.exec(x.effect.pseudoElement);
+            if (!m) return;
+            const g = all.find((y) => y.effect.pseudoElement === `::view-transition-group(${m[1]})`);
+            if (!g || g.currentTime === null) return;
+            const end = x.effect.getComputedTiming().endTime;
+            x.currentTime = Math.min(g.currentTime, end);
+          });
+        } catch (_) {}
+        html.classList.remove('wfpt-wait');
+      };
+      Promise.all(pending.map(ready)).then(resume);
+      setTimeout(resume, 3000 + parseFloat(getComputedStyle(html).getPropertyValue('--wfpt-duration')) * 1000);
     }
     const order = (document.body && document.body.dataset.pageOrder) || cfg.order;
-    if (api.last.morph.length && order !== 'together') html.classList.add('wfpt-seq');
+    if (api.last.morph.length && order !== 'together') html.classList.add(order === 'morph-effect' ? 'wfpt-seqfx' : 'wfpt-seq');
     api.last.ran = true;
     api.last.status = 'läuft';
     vt.ready.catch((err) => {
@@ -357,7 +378,7 @@
       clearNames();
       delete html.dataset.wfpt;
       delete html.dataset.wfptDir;
-      html.classList.remove('wfpt-seq');
+      html.classList.remove('wfpt-seq', 'wfpt-seqfx');
       html.classList.remove('wfpt-wait');
       html.classList.remove('wfpt-running');
       done();

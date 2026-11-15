@@ -12,10 +12,10 @@ Demo und Doku: **https://rakete13.github.io/wf-page-transition/**
 Alternative, eine Zeile im Head Code (lädt von jsDelivr, IP-Adresse der Besucher geht dorthin):
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.2.2/src/wf-page-transition.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.3.0/src/wf-page-transition.min.js"></script>
 ```
 
-GSAP wird nicht gebraucht. Der Head Code hat rund 15.500 Zeichen.
+GSAP wird nicht gebraucht. Der Head Code hat rund 18.000 Zeichen.
 
 ## Effekte
 
@@ -53,13 +53,19 @@ collection-item (Link Block)                img-wrapper   data-page-morph="bild"
 - Am besten haben beide Bilder dasselbe Motiv. Unterschiedliche Seitenverhältnisse werden beschnitten, nicht verzerrt.
 - **Bilder werden nicht überblendet, sondern überdeckt** (ab 1.2.2): Das Teaser-Bild bleibt beim Wachsen voll sichtbar, das Bild der Zielseite legt sich darüber, sobald es geladen ist. Ist es noch nicht da (Webflow lädt Bilder mit `loading="lazy"`), wartet das Einblenden. Bilder im Morph lädt die Library deshalb sofort und mit hoher Priorität.
 
-### Reihenfolge (ab 1.2)
+### Reihenfolge mit Morph (ab 1.3)
 
-Gibt es einen Morph, läuft er **zuerst**: Das Bild wächst über der stehenden alten Seite an seinen Platz, erst danach wechselt die Seite drumherum mit dem gewählten Effekt. Beim Zurück-Button umgekehrt: erst wechselt die Seite um das große Bild, dann schrumpft es in seinen Teaser. Die Gesamtdauer bleibt `data-page-duration`.
+Gibt es einen Morph, bewegt sich standardmäßig **nur das Bild**: Es wächst deckend über der stehenden alten Seite an seinen Platz. Ist es dort angekommen (und das Bild der Zielseite geladen), ist die neue Seite **sofort** da, ohne Fade und ohne Seiteneffekt. Beim Zurück-Button ist die Übersicht sofort da, und das große Bild schrumpft darüber in seinen Teaser. Der gewählte Effekt (`data-page-transition`) gilt dann nur für Seitenwechsel ohne Morph, z. B. im Menü.
 
-- `data-page-split` am body bzw. `split` im Config (Standard `0.6`): Anteil der Dauer für den Morph.
-- `data-page-order="together"` am body bzw. `order: 'together'` im Config: Morph und Seitenwechsel laufen wieder gleichzeitig.
-- Ohne Morph (z. B. Klick im Menü) gilt die volle Dauer für den Seitenwechsel.
+| `data-page-order` (body) bzw. `order` (Config) | Wirkung |
+|---|---|
+| `morph-first` | Standard: nur das Bild bewegt sich, danach ist die Seite sofort da |
+| `morph-effect` | erst der Morph, danach der Seiteneffekt; `data-page-split` bzw. `split` (Standard `0.6`) = Anteil der Dauer für den Morph |
+| `together` | Morph und Seiteneffekt gleichzeitig |
+
+Easing des Morphs: `data-page-morph-ease` bzw. `morphEase` (CSS-Easing, z. B. `cubic-bezier(.7,0,.2,1)`), sonst gilt `data-page-ease`. Die Dauer ist `data-page-duration`.
+
+Lädt das Bild der Zielseite länger als die Animation, hält der Übergang am Ende an (Teaser-Bild in voller Größe) und schließt ab, sobald es da ist, höchstens rund 3 Sekunden.
 
 ## Stehen bleiben: `data-page-keep`
 
@@ -101,7 +107,7 @@ prev-link         data-page-prev
 
 - `?wfpt-debug` an die Adresse: Hinweise in der Konsole und ein Hinweisfeld unten links. Bleibt für den Tab an. `?wfpt-debug=slow` zeigt alles in Zeitlupe, `?wfpt-debug=off` schaltet ab.
 - `WFPageTransition.last` (Effekt, Richtung, Morph-Namen, Status), `WFPageTransition.finished`, `WFPageTransition.supported`.
-- Voreinstellungen vor dem Skript (gelten für die ganze Site, Attribute am body überschreiben sie pro Seite): `window.WFPageTransitionConfig = { transition: 'fade', duration: 0.5, ease: '', radius: 24, order: 'morph-first', split: 0.6 }`.
+- Voreinstellungen vor dem Skript (gelten für die ganze Site, Attribute am body überschreiben sie pro Seite): `window.WFPageTransitionConfig = { transition: 'fade', duration: 0.5, ease: '', radius: 24, order: 'morph-first', morphEase: '', split: 0.6 }`.
 
 ## Aufbau
 
