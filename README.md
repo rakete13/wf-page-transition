@@ -12,7 +12,7 @@ Demo und Doku: **https://rakete13.github.io/wf-page-transition/**
 Alternative, eine Zeile im Head Code (lädt von jsDelivr, IP-Adresse der Besucher geht dorthin):
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.0.0/src/wf-page-transition.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.1.0/src/wf-page-transition.min.js"></script>
 ```
 
 GSAP wird nicht gebraucht. Der Head Code hat rund 13.500 Zeichen.
@@ -27,12 +27,12 @@ GSAP wird nicht gebraucht. Der Head Code hat rund 13.500 Zeichen.
 | `slide` | alte Seite schiebt nach links raus, neue kommt von rechts |
 | `slide-up` | dasselbe nach oben |
 | `zoom` | alte Seite weicht zurück, neue kommt nach vorn |
-| `sheet` | alte Seite rückt nach hinten, wird kleiner und dunkler, die neue fährt von unten darüber |
+| `sheet` | alte Seite rückt nach hinten, wird kleiner, dunkler und bekommt runde Ecken; die neue fährt mit runden Ecken von unten darüber und wird beim Ankommen eckig (wie bei iOS) |
 | `none` | kein Übergang |
 
 Der Zurück-Button spielt den Übergang, mit dem man gekommen ist, rückwärts ab.
 
-Am body einstellbar: `data-page-duration` (Sekunden, Standard `0.5`), `data-page-ease` (CSS-Easing), für `sheet` außerdem `data-page-scale` (`0.92`), `data-page-dim` (`0.5`) und `data-page-radius` (`24`).
+Am body einstellbar: `data-page-duration` (Sekunden, Standard `0.5`), `data-page-ease` (CSS-Easing), für `sheet` außerdem `data-page-scale` (`0.92`), `data-page-dim` (`0.5`) und `data-page-radius` (Eckenradius in px, Standard `24`, `0` = ohne runde Ecken).
 
 ## Elemente verwandeln: `data-page-morph`
 

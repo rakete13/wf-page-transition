@@ -72,7 +72,7 @@ const HEAD = (title) => `<!doctype html>
 <title>${title}</title>
 ${FONTS}
 <link rel="stylesheet" href="demo.css">
-<script>try{window.WFPageTransitionConfig={transition:localStorage.getItem('wfpt-demo')||'sheet'}}catch(e){}</script>
+<script>try{window.WFPageTransitionConfig={transition:localStorage.getItem('wfpt-demo')||'sheet',radius:localStorage.getItem('wfpt-demo-radius')||'24'}}catch(e){}</script>
 <script src="wf-page-transition.min.js"></script>
 </head>`;
 
@@ -94,6 +94,13 @@ ${HEADER}
     <div class="chips" id="chips">
       <span class="label">Effekt</span>
       ${['fade', 'slide', 'slide-up', 'zoom', 'sheet', 'none'].map((e) => `<button class="chip" data-v="${e}" aria-pressed="false">${e}</button>`).join('\n      ')}
+    </div>
+    <div class="chips" id="radius" style="margin-top:10px">
+      <span class="label">Ecken bei sheet</span>
+      <button class="chip" data-v="0" aria-pressed="false">eckig (0)</button>
+      <button class="chip" data-v="16" aria-pressed="false">16</button>
+      <button class="chip" data-v="24" aria-pressed="false">24</button>
+      <button class="chip" data-v="40" aria-pressed="false">40</button>
     </div>
     <p class="note">Gilt für den Weg in ein Projekt. Das Blättern zwischen Projekten schiebt immer seitlich. Zum Zusehen in Zeitlupe: <a href="?wfpt-debug=slow">Zeitlupe an</a> · <a href="?wfpt-debug=off">aus</a>. In Firefox siehst du den normalen Seitenwechsel.</p>
   </div>
@@ -134,7 +141,7 @@ navbar          data-page-keep="header"     navbar        data-page-keep="header
         <tr><td><code>data-page-transition</code></td><td>Link oder ein Element darum</td><td>wie oben</td><td>anderer Effekt nur für diesen Link, <code>none</code> = ohne Übergang</td></tr>
         <tr><td><code>data-page-duration</code></td><td>body</td><td>Sekunden, Standard <code>0.5</code></td><td>Dauer</td></tr>
         <tr><td><code>data-page-ease</code></td><td>body</td><td>CSS-Easing, z. B. <code>ease-in-out</code> oder <code>cubic-bezier(.7,0,.2,1)</code></td><td>Verlauf der Bewegung</td></tr>
-        <tr><td><code>data-page-scale</code> · <code>-dim</code> · <code>-radius</code></td><td>body</td><td><code>0.92</code> · <code>0.5</code> · <code>24</code></td><td>nur <code>sheet</code>: Größe, Abdunkeln und Ecken der hinteren Seite</td></tr>
+        <tr><td><code>data-page-scale</code> · <code>-dim</code> · <code>-radius</code></td><td>body</td><td><code>0.92</code> · <code>0.5</code> · <code>24</code></td><td>nur <code>sheet</code>: Größe und Abdunkeln der hinteren Seite, Eckenradius in px. Die hintere Seite rundet ihre Ecken ab, die neue kommt mit runden Ecken und wird beim Ankommen eckig. <code>0</code> = ohne runde Ecken</td></tr>
         <tr><td><code>data-page-morph</code></td><td>Teaser-Element und Gegenstück auf der Zielseite</td><td>frei, z. B. <code>bild</code>, <code>titel</code></td><td>Elemente mit gleichem Namen verwandeln sich ineinander</td></tr>
         <tr><td><code>data-page-item</code></td><td>Teaser-Wrapper</td><td>ohne Wert</td><td>nur nötig, wenn der Teaser kein Collection Item und kein Link Block ist</td></tr>
         <tr><td><code>data-page-keep</code></td><td>Header, Footer</td><td>Name, z. B. <code>header</code></td><td>bleibt beim Wechsel stehen (auf beiden Seiten setzen)</td></tr>
@@ -162,6 +169,16 @@ Vorher: window.WFPageTransitionConfig = { transition: 'fade', duration: 0.5, eas
     try { localStorage.setItem('wfpt-demo', b.dataset.v); } catch (_) {}
     if (window.WFPageTransition) WFPageTransition.config.transition = b.dataset.v;
     mark(b.dataset.v);
+  });
+  const rad = document.getElementById('radius');
+  const markR = (v) => rad.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.v === String(v))));
+  markR((window.WFPageTransition && WFPageTransition.config.radius) || '24');
+  rad.addEventListener('click', (e) => {
+    const b = e.target.closest('.chip');
+    if (!b) return;
+    try { localStorage.setItem('wfpt-demo-radius', b.dataset.v); } catch (_) {}
+    if (window.WFPageTransition) WFPageTransition.config.radius = b.dataset.v;
+    markR(b.dataset.v);
   });
 })();
 </script>

@@ -1,5 +1,5 @@
 /*!
- * WF Page Transition v1.0.0
+ * WF Page Transition v1.1.0
  * Übergänge zwischen Seiten für Webflow, mit den View Transitions des Browsers.
  * Jede Seite behält ihre eigene URL, es wird nichts per Skript nachgeladen.
  *
@@ -10,7 +10,7 @@
   'use strict';
   if (window.WFPageTransition) return;
 
-  const VERSION = '1.0.0';
+  const VERSION = '1.1.0';
   const html = document.documentElement;
   const cfg = Object.assign({ transition: 'fade', duration: 0.5, ease: '', debug: false }, window.WFPageTransitionConfig || {});
   const EFFECTS = ['fade', 'slide', 'slide-up', 'zoom', 'sheet', 'none'];
@@ -278,7 +278,8 @@
     if (ease) st.setProperty('--wfpt-ease', ease);
     if (b.pageScale) st.setProperty('--wfpt-scale', b.pageScale);
     if (b.pageDim) st.setProperty('--wfpt-dim', b.pageDim);
-    if (b.pageRadius) st.setProperty('--wfpt-radius', /^[\d.]+$/.test(b.pageRadius) ? b.pageRadius + 'px' : b.pageRadius);
+    const radius = b.pageRadius !== undefined ? b.pageRadius : cfg.radius;
+    if (radius !== undefined && radius !== '') st.setProperty('--wfpt-radius', /^[\d.]+$/.test(String(radius)) ? radius + 'px' : radius);
   };
 
   window.addEventListener('pageshow', (e) => {
