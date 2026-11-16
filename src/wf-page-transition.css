@@ -8,7 +8,8 @@
   --wfpt-duration: 0.5s;
   --wfpt-ease: cubic-bezier(0.7, 0, 0.2, 1);
   --wfpt-scale: 0.92; /* sheet: Größe der hinteren Seite */
-  --wfpt-dim: 0.5; /* sheet: Abdunkeln der hinteren Seite (0 bis 1) */
+  --wfpt-dim: 0.5; /* sheet: wie stark die hintere Seite in die Hintergrundfarbe übergeht (0 = gar nicht, 1 = ganz) */
+  --wfpt-bg: #000; /* sheet: Farbe hinter den Seiten (Ränder, runde Ecken, Abdunkeln) */
   --wfpt-radius: 24px; /* sheet: Ecken beider Seiten während des Wechsels, 0 = eckig */
   --wfpt-split: 0.6; /* mit Morph: Anteil der Dauer für den Morph, der Rest für den Seitenwechsel */
 }
@@ -39,7 +40,7 @@ html[data-wfpt='zoom'][data-wfpt-dir='back']::view-transition-old(root) { animat
 html[data-wfpt='zoom'][data-wfpt-dir='back']::view-transition-new(root) { animation-name: wfpt-zoom-in-back; }
 
 /* ---------- sheet: alte Seite rückt nach hinten, neue fährt von unten darüber ---------- */
-html[data-wfpt='sheet']::view-transition { background: #000; }
+html[data-wfpt='sheet']::view-transition { background: var(--wfpt-bg); }
 html[data-wfpt='sheet']::view-transition-image-pair(root) { isolation: auto; }
 html[data-wfpt='sheet']::view-transition-old(root),
 html[data-wfpt='sheet']::view-transition-new(root) { mix-blend-mode: normal; transform-origin: 50% 50%; }
@@ -132,16 +133,18 @@ html.wfpt-seqfx[data-wfpt][data-wfpt-dir='back']::view-transition-new(root) {
 @keyframes wfpt-zoom-in-front { from { opacity: 0; transform: scale(1.06); } }
 @keyframes wfpt-zoom-out-front { to { opacity: 0; transform: scale(1.06); } }
 @keyframes wfpt-zoom-in-back { from { opacity: 0; transform: scale(0.94); } }
+/* sheet: Abdunkeln über opacity: Die hintere Seite geht in die Hintergrundfarbe über (bei Schwarz
+   = dunkler, bei einer Markenfarbe = eingefärbt). */
 /* sheet: Ecken runden sich, wie bei iOS. Über clip-path, weil border-radius auf den Bildern des
    Übergangs nicht greift. Hintere Seite wird rund, obere Seite wird erst beim Ankommen eckig.
    --wfpt-radius: 0 schaltet das ab. */
 @keyframes wfpt-sheet-back {
   0% { clip-path: inset(0 round 0); }
   30% { clip-path: inset(0 round var(--wfpt-radius)); }
-  100% { transform: scale(var(--wfpt-scale)); filter: brightness(calc(1 - var(--wfpt-dim))); clip-path: inset(0 round var(--wfpt-radius)); }
+  100% { transform: scale(var(--wfpt-scale)); opacity: calc(1 - var(--wfpt-dim)); clip-path: inset(0 round var(--wfpt-radius)); }
 }
 @keyframes wfpt-sheet-front {
-  0% { transform: scale(var(--wfpt-scale)); filter: brightness(calc(1 - var(--wfpt-dim))); clip-path: inset(0 round var(--wfpt-radius)); }
+  0% { transform: scale(var(--wfpt-scale)); opacity: calc(1 - var(--wfpt-dim)); clip-path: inset(0 round var(--wfpt-radius)); }
   70% { clip-path: inset(0 round var(--wfpt-radius)); }
   100% { clip-path: inset(0 round 0); }
 }

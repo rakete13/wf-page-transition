@@ -1,5 +1,5 @@
 /*!
- * WF Page Transition v1.5.0
+ * WF Page Transition v1.6.0
  * Übergänge zwischen Seiten für Webflow, mit den View Transitions des Browsers.
  * Jede Seite behält ihre eigene URL, es wird nichts per Skript nachgeladen.
  *
@@ -10,12 +10,12 @@
   'use strict';
   if (window.WFPageTransition) return;
 
-  const VERSION = '1.5.0';
+  const VERSION = '1.6.0';
   const html = document.documentElement;
   // order (mit Morph): 'morph-first' = nur das Bild bewegt sich, danach ist die Seite sofort da ·
   // 'morph-effect' = erst Morph, dann der Seiteneffekt (split = Anteil für den Morph) ·
   // 'together' = beides gleichzeitig. morphEase = Easing des Morphs.
-  const cfg = Object.assign({ transition: 'fade', duration: 0.5, ease: '', radius: '', order: 'morph-first', split: 0.6, morphEase: '', debug: false }, window.WFPageTransitionConfig || {});
+  const cfg = Object.assign({ transition: 'fade', duration: 0.5, ease: '', radius: '', order: 'morph-first', split: 0.6, morphEase: '', background: '', dim: '', scale: '', debug: false }, window.WFPageTransitionConfig || {});
   const EFFECTS = ['fade', 'slide', 'slide-up', 'zoom', 'sheet', 'none'];
   const SCOPE = '[data-page-item],[data-page-next],[data-page-prev],.w-dyn-item';
   const supported = 'onpagereveal' in window;
@@ -307,8 +307,18 @@
     st.setProperty('--wfpt-duration', d + 's');
     const ease = toEase(b.pageEase || cfg.ease);
     if (ease) st.setProperty('--wfpt-ease', ease);
-    if (b.pageScale) st.setProperty('--wfpt-scale', b.pageScale);
-    if (b.pageDim) st.setProperty('--wfpt-dim', b.pageDim);
+    const pick = (attr, key) => (b[attr] !== undefined && b[attr] !== '' ? b[attr] : cfg[key]);
+    const scale = parseFloat(pick('pageScale', 'scale'));
+    if (Number.isFinite(scale)) st.setProperty('--wfpt-scale', String(scale));
+    const dim = pick('pageDim', 'dim');
+    if (dim === false || /^(false|none|off|no)$/i.test(String(dim))) st.setProperty('--wfpt-dim', '0');
+    else if (dim !== undefined && dim !== '' && dim !== true) {
+      const n = parseFloat(dim);
+      if (Number.isFinite(n)) st.setProperty('--wfpt-dim', String(Math.min(1, Math.max(0, n > 1 ? n / 100 : n))));
+      else issue(`Unbekannter Wert für dim: "${dim}". Erlaubt: 0 bis 1 oder false.`);
+    }
+    const bg = pick('pageBackground', 'background');
+    if (bg) st.setProperty('--wfpt-bg', String(bg).trim());
     const mease = toEase(b.pageMorphEase || cfg.morphEase);
     if (mease) st.setProperty('--wfpt-morph-ease', mease);
     const split = parseFloat(b.pageSplit !== undefined ? b.pageSplit : cfg.split);

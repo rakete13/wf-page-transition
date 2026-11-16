@@ -12,7 +12,7 @@ Demo und Doku: **https://rakete13.github.io/wf-page-transition/**
 Alternative, eine Zeile im Head Code (lädt von jsDelivr, IP-Adresse der Besucher geht dorthin):
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.5.0/src/wf-page-transition.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.6.0/src/wf-page-transition.min.js"></script>
 ```
 
 GSAP wird nicht gebraucht. Der Head Code hat rund 18.000 Zeichen.
@@ -27,12 +27,28 @@ GSAP wird nicht gebraucht. Der Head Code hat rund 18.000 Zeichen.
 | `slide` | alte Seite schiebt nach links raus, neue kommt von rechts |
 | `slide-up` | dasselbe nach oben |
 | `zoom` | alte Seite weicht zurück, neue kommt nach vorn |
-| `sheet` | alte Seite rückt nach hinten, wird kleiner, dunkler und bekommt runde Ecken; die neue fährt mit runden Ecken von unten darüber und wird beim Ankommen eckig (wie bei iOS) |
+| `sheet` | alte Seite rückt nach hinten, wird kleiner, dunkler (Hintergrundfarbe und Stärke einstellbar, siehe unten) und bekommt runde Ecken; die neue fährt mit runden Ecken von unten darüber und wird beim Ankommen eckig (wie bei iOS) |
 | `none` | kein Übergang |
 
 Der Zurück-Button spielt den Übergang, mit dem man gekommen ist, rückwärts ab.
 
-Am body einstellbar: `data-page-duration` (Sekunden, Standard `0.5`), `data-page-ease` (Easing, siehe unten), für `sheet` außerdem `data-page-scale` (`0.92`), `data-page-dim` (`0.5`) und `data-page-radius` (Eckenradius in px, Standard `24`, `0` = ohne runde Ecken).
+Am body einstellbar: `data-page-duration` (Sekunden, Standard `0.5`), `data-page-ease` (Easing, siehe unten), für `sheet` außerdem `data-page-scale` (`0.92`), `data-page-dim` (`0.5`), `data-page-background` (`#000`) und `data-page-radius` (Eckenradius in px, Standard `24`, `0` = ohne runde Ecken).
+
+### Hintergrund und Abdunkeln bei `sheet` (ab 1.6)
+
+| Config | Attribut am body | Standard | Wirkung |
+|---|---|---|---|
+| `background` | `data-page-background` | `'#000'` | Farbe hinter den Seiten: sichtbar an den Rändern, in den runden Ecken und beim Abdunkeln. Jeder CSS-Farbwert, auch Webflow-Variablen, z. B. `'var(--brand)'` |
+| `dim` | `data-page-dim` | `0.5` | Wie stark die hintere Seite in die Hintergrundfarbe übergeht: `0` bis `1` (oder `0` bis `100` als Prozent). `0` oder `false` = aus |
+| `scale` | `data-page-scale` | `0.92` | Größe der hinteren Seite |
+
+Das Abdunkeln blendet die hintere Seite zur Hintergrundfarbe hin. Bei Schwarz wird sie dunkler (wie bisher), bei einer Markenfarbe nimmt sie deren Ton an. Soll sie nur kleiner werden, ohne sich einzufärben: `dim: 0`.
+
+```html
+<script>
+  window.WFPageTransitionConfig = { transition: 'sheet', background: '#1d3cff', dim: 0.3 };
+</script>
+```
 
 ### Easing (ab 1.4)
 
@@ -120,7 +136,7 @@ prev-link         data-page-prev
 
 - `?wfpt-debug` an die Adresse: Hinweise in der Konsole und ein Hinweisfeld unten links. Bleibt für den Tab an. `?wfpt-debug=slow` zeigt alles in Zeitlupe, `?wfpt-debug=off` schaltet ab.
 - `WFPageTransition.last` (Effekt, Richtung, Morph-Namen, Status), `WFPageTransition.finished`, `WFPageTransition.supported`.
-- Voreinstellungen vor dem Skript (gelten für die ganze Site, Attribute am body überschreiben sie pro Seite): `window.WFPageTransitionConfig = { transition: 'fade', duration: 0.5, ease: '', radius: 24, order: 'morph-first', morphEase: '', split: 0.6 }`.
+- Voreinstellungen vor dem Skript (gelten für die ganze Site, Attribute am body überschreiben sie pro Seite): `window.WFPageTransitionConfig = { transition: 'fade', duration: 0.5, ease: '', radius: 24, order: 'morph-first', morphEase: '', split: 0.6, background: '#000', dim: 0.5, scale: 0.92 }`.
 
 ## Aufbau
 

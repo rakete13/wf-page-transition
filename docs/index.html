@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="demo.css">
-<script>try{window.WFPageTransitionConfig={transition:localStorage.getItem('wfpt-demo')||'sheet',radius:localStorage.getItem('wfpt-demo-radius')||'24',ease:localStorage.getItem('wfpt-demo-ease')||'',morphEase:localStorage.getItem('wfpt-demo-mease')||''}}catch(e){}</script>
+<script>try{window.WFPageTransitionConfig={transition:localStorage.getItem('wfpt-demo')||'sheet',radius:localStorage.getItem('wfpt-demo-radius')||'24',ease:localStorage.getItem('wfpt-demo-ease')||'',morphEase:localStorage.getItem('wfpt-demo-mease')||'',background:localStorage.getItem('wfpt-demo-bg')||'',dim:localStorage.getItem('wfpt-demo-dim')||''}}catch(e){}</script>
 <script src="wf-page-transition.min.js"></script>
 </head>
 <body>
@@ -17,7 +17,7 @@
 </header>
 <div class="wrap">
   <div class="lead">
-    <div class="eyebrow">WF Page Transition · v1.5.0 · View Transitions des Browsers</div>
+    <div class="eyebrow">WF Page Transition · v1.6.0 · View Transitions des Browsers</div>
     <h1>Seitenwechsel mit <em>Übergang</em>.</h1>
     <p>Jede Seite hier ist eine eigene Datei mit eigener URL. Klick auf ein Projekt: Bild und Titel verwandeln sich in den Kopf der Projektseite, der Rest wechselt mit dem gewählten Effekt. Der Zurück-Button spielt alles rückwärts. Auf den Projektseiten blätterst du unten zum nächsten Projekt.</p>
   </div>
@@ -37,6 +37,20 @@
       <button class="chip" data-v="16" aria-pressed="false">16</button>
       <button class="chip" data-v="24" aria-pressed="false">24</button>
       <button class="chip" data-v="40" aria-pressed="false">40</button>
+    </div>
+    <div class="chips" id="bg" style="margin-top:10px">
+      <span class="label">Hintergrund bei sheet</span>
+      <button class="chip" data-v="" aria-pressed="false">Schwarz (Standard)</button>
+      <button class="chip" data-v="#1d3cff" aria-pressed="false">Blau #1d3cff</button>
+      <button class="chip" data-v="#ff5a1f" aria-pressed="false">Orange #ff5a1f</button>
+      <button class="chip" data-v="#e9e6df" aria-pressed="false">Hell #e9e6df</button>
+    </div>
+    <div class="chips" id="dim" style="margin-top:10px">
+      <span class="label">Abdunkeln</span>
+      <button class="chip" data-v="false" aria-pressed="false">aus</button>
+      <button class="chip" data-v="0.2" aria-pressed="false">0.2</button>
+      <button class="chip" data-v="" aria-pressed="false">0.5 (Standard)</button>
+      <button class="chip" data-v="0.8" aria-pressed="false">0.8</button>
     </div>
     <div class="chips" id="ease" style="margin-top:10px">
       <span class="label">Easing Seite</span>
@@ -111,7 +125,7 @@
       <li><strong>Optional:</strong> am <code>body</code> einen anderen Standard setzen, Teaser und Kopfbereich mit <code>data-page-morph</code> verbinden, Header mit <code>data-page-keep</code> stehen lassen.</li>
     </ol>
     <div class="stack">
-      <pre>&lt;script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.5.0/src/wf-page-transition.min.js"&gt;&lt;/script&gt;</pre>
+      <pre>&lt;script src="https://cdn.jsdelivr.net/gh/rakete13/wf-page-transition@1.6.0/src/wf-page-transition.min.js"&gt;&lt;/script&gt;</pre>
       <p class="note">Alternative zum eingebetteten Head Code: diese eine Zeile im Head Code. GSAP wird nicht gebraucht.</p>
       <pre>Übersicht                                   Projektseite (CMS-Vorlage)
 collection-item (Link Block)                img-wrapper   data-page-morph="bild"
@@ -133,7 +147,8 @@ navbar          data-page-keep="header"     navbar        data-page-keep="header
         <tr><td><code>data-page-transition</code></td><td>Link oder ein Element darum</td><td>wie oben</td><td>anderer Effekt nur für diesen Link, <code>none</code> = ohne Übergang</td></tr>
         <tr><td><code>data-page-duration</code></td><td>body</td><td>Sekunden, Standard <code>0.5</code></td><td>Dauer</td></tr>
         <tr><td><code>data-page-ease</code></td><td>body</td><td>GSAP-Namen: <code>power1</code>–<code>power4</code>, <code>sine</code>, <code>expo</code>, <code>circ</code>, <code>back</code> jeweils mit <code>.in</code>, <code>.out</code>, <code>.inOut</code>, dazu <code>linear</code>; oder CSS-Easing wie <code>ease-in-out</code>, <code>cubic-bezier(…)</code></td><td>Verlauf der Seitenübergänge</td></tr>
-        <tr><td><code>data-page-scale</code> · <code>-dim</code> · <code>-radius</code></td><td>body</td><td><code>0.92</code> · <code>0.5</code> · <code>24</code></td><td>nur <code>sheet</code>: Größe und Abdunkeln der hinteren Seite, Eckenradius in px. Die hintere Seite rundet ihre Ecken ab, die neue kommt mit runden Ecken und wird beim Ankommen eckig. <code>0</code> = ohne runde Ecken</td></tr>
+        <tr><td><code>data-page-scale</code> · <code>-dim</code> · <code>-radius</code></td><td>body</td><td><code>0.92</code> · <code>0.5</code> · <code>24</code></td><td>nur <code>sheet</code>: Größe der hinteren Seite, wie stark sie in die Hintergrundfarbe übergeht (<code>0</code> = aus), Eckenradius in px. Die hintere Seite rundet ihre Ecken ab, die neue kommt mit runden Ecken und wird beim Ankommen eckig. <code>0</code> = ohne runde Ecken</td></tr>
+        <tr><td><code>data-page-background</code></td><td>body</td><td>CSS-Farbe, Standard <code>#000</code>, auch <code>var(--brand)</code></td><td>nur <code>sheet</code>: Farbe hinter den Seiten (Ränder, runde Ecken, Abdunkeln)</td></tr>
         <tr><td><code>data-page-order</code> · <code>-split</code></td><td>body</td><td><code>morph-first</code> (Standard), <code>morph-effect</code>, <code>together</code> · <code>0.6</code></td><td>mit Morph: Standard = nur das Bild bewegt sich, danach ist die Seite sofort da; <code>morph-effect</code> = danach noch der Seiteneffekt (Split = Anteil für den Morph)</td></tr>
         <tr><td><code>data-page-morph-ease</code></td><td>body</td><td>wie <code>data-page-ease</code></td><td>Easing des Morphs (sonst <code>data-page-ease</code>)</td></tr>
         <tr><td><code>data-page-morph</code></td><td>Teaser-Element und Gegenstück auf der Zielseite</td><td>frei, z. B. <code>bild</code>, <code>titel</code></td><td>Elemente mit gleichem Namen verwandeln sich ineinander</td></tr>
@@ -147,7 +162,7 @@ navbar          data-page-keep="header"     navbar        data-page-keep="header
     </table>
     <pre>Debug:  ?wfpt-debug an die Adresse (bleibt für den Tab an) · ?wfpt-debug=slow Zeitlupe · ?wfpt-debug=off
 API:    WFPageTransition.finished (Promise) · WFPageTransition.last · Ereignis "wfpt:done" am document
-Vorher: window.WFPageTransitionConfig = { transition: 'fade', duration: 0.5, ease: '', radius: 24, order: 'morph-first', morphEase: '', split: 0.6 }</pre>
+Vorher: window.WFPageTransitionConfig = { transition: 'fade', duration: 0.5, ease: '', radius: 24, order: 'morph-first', morphEase: '', split: 0.6, background: '#000', dim: 0.5, scale: 0.92 }</pre>
     </div>
   </section>
 </div>
@@ -178,6 +193,8 @@ Vorher: window.WFPageTransitionConfig = { transition: 'fade', duration: 0.5, eas
   };
   chipRow('ease', 'wfpt-demo-ease', 'ease');
   chipRow('mease', 'wfpt-demo-mease', 'morphEase');
+  chipRow('bg', 'wfpt-demo-bg', 'background');
+  chipRow('dim', 'wfpt-demo-dim', 'dim');
   const rad = document.getElementById('radius');
   const markR = (v) => rad.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.v === String(v))));
   markR((window.WFPageTransition && WFPageTransition.config.radius) || '24');
